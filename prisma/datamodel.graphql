@@ -1,0 +1,24 @@
+type Player {
+  id: ID! @unique
+  name: String!
+  handicap: String!
+}
+
+type Course {
+  id: ID! @unique
+  name: String!
+  location: String!
+  description: String!
+  holes: [Hole!]!
+}
+
+type Hole {
+  id: ID! @unique
+  par: String!
+  index: String!
+}
+
+type Round {
+  id: ID! @unique
+  players: [Player!]!
+}
