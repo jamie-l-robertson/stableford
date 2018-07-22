@@ -10,6 +10,7 @@ const COURSE_Q = gql`
       id
       location
       description
+      holes
     }
   }
 `;
@@ -31,6 +32,23 @@ export const Course = props => {
                   </h2>
                   <h3>Location: {data.course.location}</h3>
                   <div>Handicap: {data.course.description}</div>
+
+                  {data.course.holes &&
+                    data.course.holes.items.length > 0 && (
+                      <React.Fragment>
+                        <h3>Holes</h3>
+                        <ul>
+                          {data.course.holes.items.map((hole, i) => (
+                            <li key={"hole-" + i}>
+                              <h4>
+                                {hole.name} - Par: {hole.par} - Index:{" "}
+                                {hole.index}
+                              </h4>
+                            </li>
+                          ))}
+                        </ul>
+                      </React.Fragment>
+                    )}
                 </article>
               )}
             </React.Fragment>
