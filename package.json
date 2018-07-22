@@ -1,7 +1,7 @@
 {
   "name": "stableford-app",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "apollo-boost": "^0.1.10",
     "formik": "^0.11.11",

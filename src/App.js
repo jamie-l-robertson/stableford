@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Courses } from "./components/courses";
-import { addCourse } from "./components/courses/course/addCourse";
-import { editCourse } from "./components/courses/course/editCourse";
 import { Course } from "./components/courses/course";
 import Players from "./components/players";
 import { Player } from "./components/players/player";
 import { NotFound } from "./components/NotFound";
-import { addPlayer } from "./components/players/player/addPlayer";
-import { editPlayer } from "./components/players/player/editPlayer";
 
 class App extends Component {
-  // @TODO - Hook up to Prisma
   // Add offline data persistance
   // Make it pretty
 
