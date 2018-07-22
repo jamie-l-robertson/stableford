@@ -9,7 +9,11 @@
 # production
 /build
 
+# DBS
+/prisma
+
 # misc
+.env
 .DS_Store
 .env.local
 .env.development.local

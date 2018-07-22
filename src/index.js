@@ -7,7 +7,7 @@ import "./index.css";
 import App from "./App";
 
 const client = new ApolloClient({
-  uri: "https://eu1.prisma.sh/jamie-robertson-dfff94/stableford-app/dev"
+  uri: process.env.REACT_APP_GRAPHQL_ENDPOINT
 });
 
 ReactDOM.render(

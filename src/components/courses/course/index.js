@@ -1,38 +1,42 @@
 import React from "react";
 import { CourseWrapper } from "./styles";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
-const courseData = {
-  name: "Kingsknowe golf club",
-  location: "Edinburgh",
-  description: "A description of the the course...",
-  holes: [
-    {
-      id: 1,
-      par: 4,
-      index: 1
-    },
-    {
-      id: 2,
-      par: 3,
-      index: 0
+const COURSE_Q = gql`
+  query courseInfo($courseID: ID!) {
+    course(where: { id: $courseID }) {
+      name
+      id
+      location
+      description
     }
-  ]
-};
+  }
+`;
 
 export const Course = props => {
+  const courseID = props.match.params.id;
   return (
     <CourseWrapper>
-      <h2>{courseData.name}</h2>
-      <h3>Location: {courseData.location}</h3>
-      <div>{courseData.description}</div>
-      <h4>Holes</h4>
-      <ul>
-        {courseData.holes.map((hole, i) => (
-          <li key={hole.id}>
-            Hole {i + 1} - Par: {hole.par}
-          </li>
-        ))}
-      </ul>
+      <Query query={COURSE_Q} variables={{ courseID }}>
+        {({ loading, error, data }) => {
+          return (
+            <React.Fragment>
+              {error ? <p>{error}</p> : null}
+              {loading ? <p>Loading...</p> : null}
+              {data.course && (
+                <article>
+                  <h2>
+                    {data.course.name} <small>#{courseID}</small>
+                  </h2>
+                  <h3>Location: {data.course.location}</h3>
+                  <div>Handicap: {data.course.description}</div>
+                </article>
+              )}
+            </React.Fragment>
+          );
+        }}
+      </Query>
     </CourseWrapper>
   );
 };
