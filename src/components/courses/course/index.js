@@ -1,4 +1,5 @@
 import React from "react";
+import { Holes } from "./holes";
 import { CourseWrapper } from "./styles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
@@ -37,16 +38,7 @@ export const Course = props => {
                     data.course.holes.items.length > 0 && (
                       <React.Fragment>
                         <h3>Holes</h3>
-                        <ul>
-                          {data.course.holes.items.map((hole, i) => (
-                            <li key={"hole-" + i}>
-                              <h4>
-                                {hole.name} - Par: {hole.par} - Index:{" "}
-                                {hole.index}
-                              </h4>
-                            </li>
-                          ))}
-                        </ul>
+                        <Holes data={data.course.holes} />
                       </React.Fragment>
                     )}
                 </article>

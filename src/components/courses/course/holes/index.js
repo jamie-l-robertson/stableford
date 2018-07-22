@@ -1,6 +1,20 @@
 import React from "react";
-import HolesWrapper from "./styles";
+import { Hole } from "./hole";
+import { HolesWrapper } from "./styles";
 
 export const Holes = props => {
-  return <React.Fragment>List of holes</React.Fragment>;
+  return (
+    <HolesWrapper>
+      <ul>
+        {props.data.items.map((hole, i) => (
+          <Hole
+            key={`hole-${i}`}
+            name={hole.name}
+            par={hole.par}
+            index={hole.index}
+          />
+        ))}
+      </ul>
+    </HolesWrapper>
+  );
 };
