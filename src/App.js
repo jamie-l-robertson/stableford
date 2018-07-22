@@ -23,12 +23,8 @@ class App extends Component {
               component={Courses}
             />
             <Route exact path="/courses/:id" component={Course} />
-            <Route exact path="/courses/course/add" component={addCourse} />
-            <Route exact path="/courses/course/edit" component={editCourse} />
             <Route exact path="/players" component={Players} />
             <Route exact path="/players/:id" component={Player} />
-            <Route exact path="/players/player/add" component={addPlayer} />
-            <Route exact path="/players/player/edit" component={editPlayer} />
             <Route component={NotFound} />
           </Switch>
         </Router>
