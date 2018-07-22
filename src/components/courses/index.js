@@ -4,19 +4,6 @@ import { CoursesWrapper } from "./styles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-const courseData = [
-  {
-    id: "1",
-    name: "Kingsknowe Golf Club",
-    location: "Edinburgh"
-  },
-  {
-    id: "2",
-    name: "Muirfield",
-    location: "Gullane"
-  }
-];
-
 const COURSES_Q = gql`
   {
     courses {
