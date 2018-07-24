@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Courses } from './components/courses';
-import { Course } from './components/courses/course';
-import Players from './components/players';
-import { Player } from './components/players/player';
-import Rounds from './components/rounds';
-import { Round } from './components/rounds/round';
-import { NotFound } from './components/NotFound';
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Courses } from "./components/courses";
+import { Course } from "./components/courses/course";
+import Players from "./components/players";
+import { Player } from "./components/players/player";
+import Rounds from "./components/rounds";
+import { Round } from "./components/rounds/round";
+import addRound from "./components/rounds/addRound";
+import { NotFound } from "./components/NotFound";
 
 class App extends Component {
   // Add offline data persistance
@@ -19,12 +20,17 @@ class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path={process.env.PUBLIC_URL + '/'} component={Courses} />
+            <Route
+              exact
+              path={process.env.PUBLIC_URL + "/"}
+              component={Courses}
+            />
             <Route exact path="/courses/:id" component={Course} />
             <Route exact path="/players" component={Players} />
             <Route exact path="/players/:id" component={Player} />
             <Route exact path="/rounds" component={Rounds} />
             <Route exact path="/round/:id" component={Round} />
+            <Route exact path="/add-round" component={addRound} />
             <Route component={NotFound} />
           </Switch>
         </Router>
