@@ -40,7 +40,7 @@ export const Round = props => {
                     {data.round.courses[0].holes.items &&
                       data.round.courses[0].holes.items.map((hole, i) => (
                         <li key={i}>
-                          {hole.name} - Par: {hole.par} - STAB: #{hole.index}
+                          {hole.name} - Par: {hole.par} - Index: #{hole.index}
                         </li>
                       ))}
                   </ul>

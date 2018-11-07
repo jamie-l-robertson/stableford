@@ -16,8 +16,10 @@ const PLAYERS_Q = gql`
 
 class Players extends React.Component {
   render() {
+    const { playersVisible } = this.props;
+
     return (
-      <PlayersWrapper>
+      <PlayersWrapper show={playersVisible}>
         <Query query={PLAYERS_Q}>
           {({ loading, error, data }) => {
             console.log(data);
