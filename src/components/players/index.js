@@ -18,6 +18,8 @@ const PLAYERS_Q = gql`
 
 class Players extends React.Component {
   render() {
+    const { playersVisible } = this.props;
+
     return (
       <Container>
         <Grid columns={3}>
@@ -26,6 +28,7 @@ class Players extends React.Component {
               console.log(data);
               return (
                 <Fragment>
+
                   {error ? <li>{error}</li> : null}
                   {loading ? <li>Loading...</li> : null}
                   {data.players &&

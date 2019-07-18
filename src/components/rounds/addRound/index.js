@@ -2,10 +2,21 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import Players from "../../players/index";
+import { Course } from "../../courses/course/index";
 
 const GET_COURSES_Q = gql`
   {
     courses {
+      id
+      name
+    }
+  }
+`;
+
+const GET_PLAYERS_Q = gql`
+  {
+    players {
       id
       name
     }
@@ -38,11 +49,20 @@ const ADD_ROUND_Q = gql`
 `;
 
 class addRound extends React.Component {
+  state = {
+    playersVisible: false,
+    courseVisible: false,
+    courseID: null
+  };
+
   handleCourseChange(e) {
-    if (e.target.value !== "Please choose...") {
-      console.log(e.target.value);
-    }
+    this.setState({
+      playersVisible: e.target.value !== "Please choose..." ? true : false,
+      courseVisible: e.target.value !== "Please choose..." ? true : false,
+      courseID: e.target.value
+    });
   }
+
   render() {
     return (
       <React.Fragment>
@@ -52,14 +72,26 @@ class addRound extends React.Component {
               <React.Fragment>
                 {error ? <div>{error}</div> : null}
                 {loading ? <div>Loading...</div> : null}
-                <select onChange={this.handleCourseChange}>
+                <label>Choose course</label>
+                <select onChange={e => this.handleCourseChange(e)}>
                   <option selected>Please choose...</option>
                   {data.courses &&
                     data.courses.map((course, i) => (
-                      <option key={`course-option-${i}`}>{course.name}</option>
+                      <option key={`course-option-${i}`} value={course.id}>
+                        {course.name}
+                      </option>
                     ))}
                 </select>
-                <Link to="/add-round">Add round +</Link>
+
+                {/* <Link to="/add-round" className="btn">
+                  Add round +
+                </Link> */}
+                <Players playersVisible={this.state.playersVisible} />
+                <Course
+                  courseVisible={this.state.courseVisible}
+                  courseID={this.state.courseID}
+                  editable={true}
+                />
               </React.Fragment>
             );
           }}
