@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navigation from './components/nav';
 import { Courses } from "./components/courses";
 import { Course } from "./components/courses/course";
 import Players from "./components/players";
@@ -19,21 +20,25 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-          <Switch>
-            <Route
-              exact
-              path={process.env.PUBLIC_URL + "/"}
-              component={Courses}
-            />
-            <Route exact path="/courses/:id" component={Course} />
-            <Route exact path="/players" component={Players} />
-            <Route exact path="/players/:id" component={Player} />
-            <Route exact path="/rounds" component={Rounds} />
-            <Route exact path="/round/:id" component={Round} />
-            <Route exact path="/add-round" component={addRound} />
-            <Route component={NotFound} />
-          </Switch>
+          <div>
+            <Navigation />
+            <Switch>
+              <Route
+                exact
+                path={process.env.PUBLIC_URL + "/"}
+                component={Courses}
+              />
+              <Route exact path="/courses/:id" component={Course} />
+              <Route exact path="/players" component={Players} />
+              <Route exact path="/players/:id" component={Player} />
+              <Route exact path="/rounds" component={Rounds} />
+              <Route exact path="/round/:id" component={Round} />
+              <Route exact path="/add-round" component={addRound} />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
         </Router>
+
       </div>
     );
   }
