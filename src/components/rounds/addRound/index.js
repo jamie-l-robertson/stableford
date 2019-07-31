@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
+import { Grid, Form, Select, Button } from "semantic-ui-react";
 import gql from "graphql-tag";
+import Calendar from "react-calendar";
 import Players from "../../players/index";
-import { Course } from "../../courses/course/index";
 
 const GET_COURSES_Q = gql`
   {
@@ -50,53 +50,84 @@ const ADD_ROUND_Q = gql`
 
 class addRound extends React.Component {
   state = {
-    playersVisible: false,
-    courseVisible: false,
+    date: null,
     courseID: null
   };
 
-  handleCourseChange(e) {
-    this.setState({
-      playersVisible: e.target.value !== "Please choose..." ? true : false,
-      courseVisible: e.target.value !== "Please choose..." ? true : false,
-      courseID: e.target.value
+  handleSubmit = event => {
+    console.log("form submitted");
+    event.preventDefault();
+  };
+
+  courseSelectHandler(courses) {
+    const options = courses.map(course => {
+      return {
+        key: course.id,
+        text: course.name,
+        value: course.id
+      };
     });
+
+    return [...options];
   }
+
+  onCalendarChange = date => this.setState({ date });
 
   render() {
     return (
-      <React.Fragment>
-        <Query query={GET_COURSES_Q}>
-          {({ loading, error, data }) => {
-            return (
-              <React.Fragment>
-                {error ? <div>{error}</div> : null}
-                {loading ? <div>Loading...</div> : null}
-                <label>Choose course</label>
-                <select onChange={e => this.handleCourseChange(e)}>
-                  <option selected>Please choose...</option>
-                  {data.courses &&
-                    data.courses.map((course, i) => (
-                      <option key={`course-option-${i}`} value={course.id}>
-                        {course.name}
-                      </option>
-                    ))}
-                </select>
+      <Query query={GET_COURSES_Q}>
+        {({ loading, error, data }) => {
+          const { courses } = data;
 
-                {/* <Link to="/add-round" className="btn">
-                  Add round +
-                </Link> */}
-                <Players playersVisible={this.state.playersVisible} />
-                <Course
-                  courseVisible={this.state.courseVisible}
-                  courseID={this.state.courseID}
-                  editable={true}
-                />
-              </React.Fragment>
-            );
-          }}
-        </Query>
-      </React.Fragment>
+          return (
+            <Form onSubmit={this.handleSubmit}>
+              {error ? <div>{error}</div> : null}
+              {loading ? <div>Loading...</div> : null}
+              <Grid container divided>
+                <Grid.Row>
+                  {courses && (
+                    <Grid.Column width={4}>
+                      <Form.Field
+                        control={Select}
+                        options={this.courseSelectHandler(courses)}
+                        label={{
+                          children: "Course",
+                          htmlFor: "form-select-control-course"
+                        }}
+                        placeholder="Course"
+                        search
+                        searchInput={{ id: "form-select-control-course" }}
+                        required
+                      />
+                      <Form.Field>
+                        <Calendar
+                          onChange={this.onCalendarChange}
+                          value={this.state.date}
+                        />
+                      </Form.Field>
+                      <Form.Input
+                        fluid
+                        label="Tee time"
+                        placeholder="10:00"
+                        required
+                      />
+                      <Button type="submit" primary>
+                        Start round
+                      </Button>
+                    </Grid.Column>
+                  )}
+                  <Grid.Column width={12}>
+                    <Form.Field>
+                      <label>Players</label>
+                    </Form.Field>
+                    <Players layout="list" selectable />
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Form>
+          );
+        }}
+      </Query>
     );
   }
 }
