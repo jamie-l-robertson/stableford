@@ -100,6 +100,7 @@ class addRound extends React.Component {
                         required
                       />
                       <Form.Field>
+                        <label>Tee Date:</label>
                         <Calendar
                           onChange={this.onCalendarChange}
                           value={this.state.date}
