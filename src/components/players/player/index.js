@@ -2,6 +2,10 @@ import React from "react";
 import { PlayerWrapper } from "./styles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { Layout, Card, Icon, Divider, Tag } from "antd";
+
+const { Content, Sider } = Layout;
+const { Meta } = Card;
 
 const PLAYER_Q = gql`
   query playerInfo($playerID: ID!) {
@@ -10,6 +14,10 @@ const PLAYER_Q = gql`
       id
       handicap
       bio
+      rounds {
+        id
+        scorecard
+      }
     }
   }
 `;
@@ -17,35 +25,44 @@ const PLAYER_Q = gql`
 export const Player = props => {
   const playerID = props.match.params.id;
   return (
-    <PlayerWrapper>
-      <Query query={PLAYER_Q} variables={{ playerID }}>
-        {({ loading, error, data }) => {
-          const { player } = data;
+    <Query query={PLAYER_Q} variables={{ playerID }}>
+      {({ loading, error, data }) => {
+        const { player } = data;
 
-          return (
-            <React.Fragment>
-              <ul>
+        return (
+          <Content>
+            <Layout style={{ background: "#FFFFFF" }}>
+              <Sider
+                width={280}
+                style={{
+                  background: "#FFFFFF",
+                  borderRight: "1px solid #EEEEEE",
+                  paddingRight: "30px"
+                }}
+              >
                 {error ? <li>{error}</li> : null}
                 {loading ? <li>Loading...</li> : null}
                 {player && (
-                  <article>
-                    <h2>
-                      {player.name} <small>#{playerID}</small>
-                    </h2>
-                    <img
-                      src="/images/user-default.svg"
-                      width="50px"
-                      height="50px"
-                    />
-                    <h3>Handicap: {player.handicap}</h3>
-                    {player.bio && <div>{player.bio}</div>}
-                  </article>
+                  <Card
+                    cover={<img alt="example" src="/images/user-default.svg" />}
+                  >
+                    <Meta title={player.name} />
+                    <Divider />
+                    <Meta title="Bio" description={player.bio} />
+                    <Divider />
+                    <Meta title="Handicap" description={player.handicap} />
+                    <Divider />
+                    <Meta title="ID" description={[<Tag>{player.id}</Tag>]} />
+                  </Card>
                 )}
-              </ul>
-            </React.Fragment>
-          );
-        }}
-      </Query>
-    </PlayerWrapper>
+              </Sider>
+              <Content style={{ padding: "0 30px", minHeight: 400 }}>
+                round data
+              </Content>
+            </Layout>
+          </Content>
+        );
+      }}
+    </Query>
   );
 };

@@ -9,7 +9,6 @@ import { Player } from "./components/players/player";
 import Rounds from "./components/rounds";
 import { Round } from "./components/rounds/round";
 import addRound from "./components/rounds/addRound";
-import submitRound from "./components/rounds/submitRound";
 import { NotFound } from "./components/NotFound";
 
 const { Content } = Layout;
@@ -17,9 +16,6 @@ const { Content } = Layout;
 class App extends Component {
   // Add offline data persistance
   // Make it pretty
-
-  state = {};
-
   render() {
     return (
       <div className="App">
@@ -41,7 +37,6 @@ class App extends Component {
                     <Route exact path="/rounds" component={Rounds} />
                     <Route exact path="/round/:id" component={Round} />
                     <Route exact path="/add-round" component={addRound} />
-                    <Route exact path="/submit-round" component={submitRound} />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>

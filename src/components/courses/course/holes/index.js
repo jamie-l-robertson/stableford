@@ -21,5 +21,7 @@ const columns = [
 ];
 
 export const Holes = props => {
-  return <Table columns={columns} dataSource={props.data.items} />;
+  return (
+    <Table columns={columns} dataSource={props.data.items} pagination={false} />
+  );
 };

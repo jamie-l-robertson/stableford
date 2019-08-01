@@ -1,65 +1,19 @@
-// import React, { Fragment } from "react";
-// import { Query } from "react-apollo";
-// import gql from "graphql-tag";
-// import {
-//   Table,
-//   PageHeader,
-//   Divider,
-//   InputNumber,
-//   Popconfirm,
-//   Form,
-//   Input
-// } from "antd";
-
-// const EditableContext = React.createContext();
-
-// export const Round = props => {
-//   const roundID = props.match.params.id;
-//   return (
-//     <React.Fragment>
-//       <Query query={ROUND_Q} variables={{ roundID }}>
-//         {({ loading, error, data }) => {
-//           return (
-//             <React.Fragment>
-//               {error ? <div>{error}</div> : null}
-//               {loading ? <div>{loading}</div> : null}
-//               {data.round && (
-//                 <Fragment>
-//                   <PageHeader
-//                     onBack={() => window.history.back()}
-//                     title={data.round.courses[0].name}
-//                     subTitle={`Date: ${data.round.teeTime}`}
-//                   />
-//                   <Divider />
-//                   <Table
-//                     columns={columns}
-//                     dataSource={data.round.scorecard}
-//                     bordered
-//                     title={() => "Sorecard"}
-//                     pagination={false}
-//                   />
-//                 </Fragment>
-//               )}
-//             </React.Fragment>
-//           );
-//         }}
-//       </Query>
-//     </React.Fragment>
-//   );
-// };
-
 import React, { Fragment } from "react";
 import { Query, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import {
+  Row,
+  Col,
   PageHeader,
   Table,
   Input,
-  InputNumber,
   Popconfirm,
   Form,
   Divider,
-  Icon
+  Icon,
+  Checkbox,
+  Button,
+  Tag
 } from "antd";
 
 const ROUND_Q = gql`
@@ -78,19 +32,11 @@ const ROUND_Q = gql`
         handicap
         status
       }
+      complete
     }
   }
 `;
 
-// const data = [];
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i.toString(),
-//     name: `Edrward ${i}`,
-//     age: 32,
-//     address: `London Park no. ${i}`
-//   });
-// }
 const EditableContext = React.createContext();
 
 class EditableCell extends React.Component {
@@ -140,7 +86,8 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { editingKey: "", isFirstRender: true };
+    this.state = { editingKey: "", isFirstRender: true, roundComplete: false };
+
     this.columns = [
       {
         title: "Player",
@@ -168,6 +115,7 @@ class EditableTable extends React.Component {
       sorter: (a, b) => a.total - b.total,
       align: "right"
     });
+
     this.columns.push({
       title: "",
       dataIndex: "operation",
@@ -220,50 +168,54 @@ class EditableTable extends React.Component {
         return;
       }
 
-      const newData = { ...this.state.data };
-      const index = newData.round.scorecard.findIndex(item => key === item.key);
+      const currentData = { ...this.state.data };
+      const round = currentData.round;
 
-      // console.log(newData.round.scorecard[index].name);
-      console.log(row);
+      const index = round.scorecard.findIndex(item => key === item.key);
+      const rowData = [];
+      let score = 0;
 
-      if (index > -1) {
-        const item = newData.round.scorecard[index];
-        newData.round.scorecard.splice(index, 1, {
-          ...item,
-          ...row
+      for (var i = 0; i < row.hole.length; i++) {
+        score += parseInt(row.hole[i].putts, 10);
+
+        rowData.push({
+          number: i + 1,
+          putts: parseInt(row.hole[i].putts, 10)
         });
-        this.setState({ data: newData, editingKey: "" });
-      } else {
-        newData.push(row);
-        this.setState({ data: newData, editingKey: "" });
       }
 
       const scorecardData = {
-        id: newData.round.scorecard[index].id,
-        name: newData.round.scorecard[index].name,
-        holes: row
+        key: index,
+        id: round.players[index].id,
+        name: round.scorecard[index].name,
+        hole: rowData,
+        total: score
       };
 
-      console.log(scorecardData);
+      const item = round.scorecard[index];
 
-      // this.props.client
-      //   .mutate({
-      //     mutation: gql`
-      //       mutation upateScorecard($id: ID, $scorecard: Json) {
-      //         updateRound(where: { id: $id }, data: { scorecard: $scorecard }) {
-      //           id
-      //         }
-      //       }
-      //     `,
-      //     variables: {
-      //       id: newData.round.scorecard[index].id,
-      //       scorecard: {}
-      //     }
-      //   })
-      //   .then(result => {
-      //     console.log(result);
-      //     return true;
-      //   });
+      round.scorecard.splice(index, 1, {
+        ...item,
+        ...row
+      });
+
+      round.scorecard[index] = scorecardData;
+      this.setState({ editingKey: "" });
+
+      this.props.client.mutate({
+        mutation: gql`
+          mutation upateScorecard($id: ID, $scorecard: Json) {
+            updateRound(where: { id: $id }, data: { scorecard: $scorecard }) {
+              id
+              scorecard
+            }
+          }
+        `,
+        variables: {
+          id: this.props.match.params.id,
+          scorecard: round.scorecard
+        }
+      });
     });
   }
 
@@ -271,17 +223,34 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: key });
   }
 
-  setData = data => {
-    if (this.state.isFirstRender) {
-      this.setState({ data, isFirstRender: false });
-    }
+  handleSubmit(e) {
+    e.preventDefault();
 
-    console.log(this.state);
+    if (!this.state.roundComplete) return false;
+
+    this.props.client.mutate({
+      mutation: gql`
+        mutation upateScorecard($id: ID, $complete: Boolean) {
+          updateRound(where: { id: $id }, data: { complete: $complete }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: this.props.match.params.id,
+        complete: this.state.roundComplete
+      }
+    });
+  }
+
+  handleCompleted = e => {
+    this.setState({
+      roundComplete: e.target.checked
+    });
   };
 
   render() {
     const roundID = this.props.match.params.id;
-
     const components = {
       body: {
         cell: EditableCell
@@ -292,6 +261,7 @@ class EditableTable extends React.Component {
       if (!col.editable) {
         return col;
       }
+
       return {
         ...col,
         onCell: record => ({
@@ -308,9 +278,12 @@ class EditableTable extends React.Component {
       <Query
         query={ROUND_Q}
         variables={{ roundID }}
-        onCompleted={data => this.setData(data)}
+        onCompleted={data => this.setState({ data })}
+        fetchPolicy="cache-and-network"
+        errorPolicy="ignore"
       >
         {({ loading, error, data }) => {
+          console.log(data);
           return (
             <EditableContext.Provider value={this.props.form}>
               {error ? <div>{error}</div> : null}
@@ -320,17 +293,43 @@ class EditableTable extends React.Component {
                   <PageHeader
                     onBack={() => window.history.back()}
                     title={data.round.courses[0].name}
-                    subTitle={`Date: ${data.round.teeTime}`}
+                    subTitle={`Date: ${new Date(data.round.teeTime)}`}
+                    extra={[
+                      <Tag
+                        color={`${data.round.complete ? "green" : "orange"}`}
+                      >
+                        {data.round.complete ? "Complete" : "In progress"}
+                      </Tag>,
+                      <Tag>{roundID}</Tag>
+                    ]}
                   />
                   <Divider />
                   <Table
                     components={components}
                     bordered
-                    dataSource={this.state.data.round.scorecard}
+                    dataSource={data.round.scorecard}
                     bordered
                     columns={columns}
                     rowClassName="editable-row"
                     pagination={false}
+                    footer={() => {
+                      return (
+                        <Row>
+                          <Col span={24} style={{ textAlign: "right" }}>
+                            <Checkbox onChange={this.handleCompleted}>
+                              Finish
+                            </Checkbox>
+                            {/* Hook up final submission */}
+                            <Button
+                              type="primary"
+                              onClick={e => this.handleSubmit(e)}
+                            >
+                              Submit <Icon type="save" />
+                            </Button>
+                          </Col>
+                        </Row>
+                      );
+                    }}
                   />
                 </Fragment>
               )}

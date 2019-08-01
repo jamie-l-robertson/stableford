@@ -2,7 +2,9 @@ import React, { Fragment } from "react";
 import { Holes } from "./holes";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import { Col, Row, PageHeader, Divider } from "antd";
+import { Col, Row, PageHeader, Divider, Typography } from "antd";
+
+const { Paragraph, Title } = Typography;
 
 const COURSE_Q = gql`
   query courseInfo($courseID: ID!) {
@@ -51,6 +53,11 @@ export const Course = props => {
                       <Description term="Location">
                         {data.course.location}
                       </Description>
+                    </Row>
+
+                    <Divider />
+                    <Row>
+                      <Paragraph>{data.course.description}</Paragraph>
                     </Row>
 
                     {data.course.holes && data.course.holes.items.length > 0 && (
