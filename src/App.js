@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navigation from './components/nav';
+import { Layout, List, Divider, Button, Icon } from "antd";
+import Navigation from "./components/nav";
 import { Courses } from "./components/courses";
 import { Course } from "./components/courses/course";
 import Players from "./components/players";
@@ -8,7 +9,10 @@ import { Player } from "./components/players/player";
 import Rounds from "./components/rounds";
 import { Round } from "./components/rounds/round";
 import addRound from "./components/rounds/addRound";
+import submitRound from "./components/rounds/submitRound";
 import { NotFound } from "./components/NotFound";
+
+const { Content } = Layout;
 
 class App extends Component {
   // Add offline data persistance
@@ -22,23 +26,29 @@ class App extends Component {
         <Router>
           <div>
             <Navigation />
-            <Switch>
-              <Route
-                exact
-                path={process.env.PUBLIC_URL + "/"}
-                component={Courses}
-              />
-              <Route exact path="/courses/:id" component={Course} />
-              <Route exact path="/players" component={Players} />
-              <Route exact path="/players/:id" component={Player} />
-              <Route exact path="/rounds" component={Rounds} />
-              <Route exact path="/round/:id" component={Round} />
-              <Route exact path="/add-round" component={addRound} />
-              <Route component={NotFound} />
-            </Switch>
+            <Layout>
+              <Content style={{ padding: "30px" }}>
+                <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
+                  <Switch>
+                    <Route
+                      exact
+                      path={process.env.PUBLIC_URL + "/"}
+                      component={Courses}
+                    />
+                    <Route exact path="/courses/:id" component={Course} />
+                    <Route exact path="/players" component={Players} />
+                    <Route exact path="/players/:id" component={Player} />
+                    <Route exact path="/rounds" component={Rounds} />
+                    <Route exact path="/round/:id" component={Round} />
+                    <Route exact path="/add-round" component={addRound} />
+                    <Route exact path="/submit-round" component={submitRound} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </Layout>
+              </Content>
+            </Layout>
           </div>
         </Router>
-
       </div>
     );
   }

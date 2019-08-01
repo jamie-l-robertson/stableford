@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Holes } from "./holes";
-import { CourseWrapper } from "./styles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { Col, Row, PageHeader, Divider } from "antd";
 
 const COURSE_Q = gql`
   query courseInfo($courseID: ID!) {
@@ -16,13 +16,22 @@ const COURSE_Q = gql`
   }
 `;
 
+const Description = ({ term, children, span = 4 }) => (
+  <Col span={span}>
+    <div className="description">
+      <div className="term">
+        <b>{term}</b>
+      </div>
+      <div className="detail">{children}</div>
+    </div>
+  </Col>
+);
+
 export const Course = props => {
   const courseID = props.match.params.id || props.courseID;
 
-  console.log(props);
-
   return (
-    <CourseWrapper>
+    <Fragment>
       {courseID && (
         <Query query={COURSE_Q} variables={{ courseID }}>
           {({ loading, error, data }) => {
@@ -31,31 +40,39 @@ export const Course = props => {
                 {error ? <p>{error}</p> : null}
                 {loading ? <p>Loading...</p> : null}
                 {data.course && (
-                  <article>
-                    <h2>
-                      {data.course.name} <small>#{courseID}</small>
-                    </h2>
-                    <h3>Location: {data.course.location}</h3>
-                    <div>Handicap: {data.course.description}</div>
+                  <Fragment>
+                    <PageHeader
+                      onBack={() => window.history.back()}
+                      title={data.course.name}
+                    />
+                    <Divider />
+                    <Row>
+                      <Description term="Course ID">{courseID}</Description>
+                      <Description term="Location">
+                        {data.course.location}
+                      </Description>
+                    </Row>
 
-                    {data.course.holes &&
-                      data.course.holes.items.length > 0 && (
-                        <React.Fragment>
+                    {data.course.holes && data.course.holes.items.length > 0 && (
+                      <Fragment>
+                        <Divider />
+                        <Row>
                           <h3>Holes</h3>
                           <Holes
                             data={data.course.holes}
                             editable={props.editable}
                           />
-                        </React.Fragment>
-                      )}
-                  </article>
+                        </Row>
+                      </Fragment>
+                    )}
+                  </Fragment>
                 )}
               </React.Fragment>
             );
           }}
         </Query>
       )}
-    </CourseWrapper>
+    </Fragment>
   );
 };
 

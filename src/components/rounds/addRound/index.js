@@ -76,65 +76,63 @@ class addRound extends React.Component {
 
   render() {
     return (
-      <Layout>
-        <Query query={GET_COURSES_Q}>
-          {({ loading, error, data }) => {
-            const { courses } = data;
+      <Query query={GET_COURSES_Q}>
+        {({ loading, error, data }) => {
+          const { courses } = data;
 
-            return (
-              <Form onSubmit={this.handleSubmit}>
-                {error ? <div>{error}</div> : null}
-                {loading ? <div>Loading...</div> : null}
-                <Content style={{ padding: "30px" }}>
-                  <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
-                    {courses && (
-                      <Sider
-                        width={280}
-                        style={{
-                          background: "#FFFFFF",
-                          borderRight: "1px solid #EEEEEE",
-                          paddingRight: "30px"
-                        }}
-                      >
-                        <Form.Item label="Course">
-                          <Select placeholder="Select course">
-                            {courses.map(course => (
-                              <option key={course.id} value={course.id}>
-                                {course.name}
-                              </option>
-                            ))}
-                          </Select>
-                        </Form.Item>
-
-                        <Form.Item label="Tee date">
-                          <DatePicker
-                            placeholder="Select date"
-                            onChange={this.onCalendarChange}
-                            value={this.state.date}
-                            style={{ width: "100%" }}
-                          />
-                        </Form.Item>
-                        <Form.Item label="Tee time">
-                          <Input placeholder="Tee time" />
-                        </Form.Item>
-                        <Button type="primary">
-                          Start round
-                          <Icon type="right" />
-                        </Button>
-                      </Sider>
-                    )}
-                    <Content style={{ padding: "0 30px", minHeight: 400 }}>
-                      <Form.Item label="Players">
-                        <Players layout="list" selectable />
+          return (
+            <Form onSubmit={this.handleSubmit}>
+              {error ? <div>{error}</div> : null}
+              {loading ? <div>Loading...</div> : null}
+              <Content>
+                <Layout style={{ background: "#FFFFFF" }}>
+                  {courses && (
+                    <Sider
+                      width={280}
+                      style={{
+                        background: "#FFFFFF",
+                        borderRight: "1px solid #EEEEEE",
+                        paddingRight: "30px"
+                      }}
+                    >
+                      <Form.Item label="Course">
+                        <Select placeholder="Select course">
+                          {courses.map(course => (
+                            <option key={course.id} value={course.id}>
+                              {course.name}
+                            </option>
+                          ))}
+                        </Select>
                       </Form.Item>
-                    </Content>
-                  </Layout>
-                </Content>
-              </Form>
-            );
-          }}
-        </Query>
-      </Layout>
+
+                      <Form.Item label="Tee date">
+                        <DatePicker
+                          placeholder="Select date"
+                          onChange={this.onCalendarChange}
+                          value={this.state.date}
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                      <Form.Item label="Tee time">
+                        <Input placeholder="Tee time" />
+                      </Form.Item>
+                      <Button type="primary">
+                        Start round
+                        <Icon type="right" />
+                      </Button>
+                    </Sider>
+                  )}
+                  <Content style={{ padding: "0 30px", minHeight: 400 }}>
+                    <Form.Item label="Players">
+                      <Players layout="list" selectable />
+                    </Form.Item>
+                  </Content>
+                </Layout>
+              </Content>
+            </Form>
+          );
+        }}
+      </Query>
     );
   }
 }

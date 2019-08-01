@@ -11,13 +11,8 @@ const navItems = [
   },
   {
     url: "/rounds",
-    text: "Previous Rounds",
+    text: "Rounds",
     icon: "database"
-  },
-  {
-    url: "/complete-round",
-    text: "Submit Scorecard",
-    icon: "audit"
   }
 ];
 

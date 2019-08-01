@@ -21,27 +21,23 @@ const PLAYERS_Q = gql`
 class Players extends React.Component {
   render() {
     return (
-      <Layout>
-        <Query query={PLAYERS_Q}>
-          {({ loading, error, data }) => {
-            const { layout } = this.props;
-            return (
-              <Content style={{ padding: "30px" }}>
-                <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
-                  <h2>Players</h2>
-                  {error ? <div>{error}</div> : null}
-                  {loading ? <div>Loading...</div> : null}
-                  {data.players && layout === "list" ? (
-                    <PlayerList players={data.players} {...this.props} />
-                  ) : (
-                    <PlayerGrid players={data.players} {...this.props} />
-                  )}
-                </Layout>
-              </Content>
-            );
-          }}
-        </Query>
-      </Layout>
+      <Query query={PLAYERS_Q}>
+        {({ loading, error, data }) => {
+          const { layout } = this.props;
+          return (
+            <Fragment>
+              <h2>Players</h2>
+              {error ? <div>{error}</div> : null}
+              {loading ? <div>Loading...</div> : null}
+              {data.players && layout === "list" ? (
+                <PlayerList players={data.players} {...this.props} />
+              ) : (
+                <PlayerGrid players={data.players} {...this.props} />
+              )}
+            </Fragment>
+          );
+        }}
+      </Query>
     );
   }
 }
