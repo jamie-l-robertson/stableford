@@ -4,6 +4,9 @@ import { CoursesWrapper } from "./styles";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
+import { Layout, List } from "antd";
+const { Content } = Layout;
+
 const COURSES_Q = gql`
   {
     courses {
@@ -16,28 +19,35 @@ const COURSES_Q = gql`
 
 export const Courses = props => {
   return (
-    <CoursesWrapper>
+    <Layout>
       <Query query={COURSES_Q}>
         {({ loading, error, data }) => {
           return (
-            <React.Fragment>
-              <ul>
-                {error ? <li>{error}</li> : null}
-                {loading ? <li>Loading...</li> : null}
-
-                {data.courses &&
-                  data.courses.map(course => (
-                    <li key={course.id}>
-                      <Link to={`/courses/${course.id}`}>
-                        {course.name}, {course.location}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </React.Fragment>
+            <Content style={{ padding: "30px" }}>
+              <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
+                <h2>Courses</h2>
+                <List
+                  dataSource={data.courses}
+                  itemLayout="horizontal"
+                  renderItem={course => (
+                    <List.Item
+                      key={course.id}
+                      actions={[
+                        <Link to={`/courses/${course.id}`}>Course detail</Link>
+                      ]}
+                    >
+                      <List.Item.Meta
+                        title={course.name}
+                        description={course.location}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </Layout>
+            </Content>
           );
         }}
       </Query>
-    </CoursesWrapper>
+    </Layout>
   );
 };

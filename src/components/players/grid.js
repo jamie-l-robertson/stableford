@@ -1,32 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Grid, Card, Icon, Image } from "semantic-ui-react";
+import { Row, Col, Card, Icon, Avatar } from "antd";
+
+const { Meta } = Card;
 
 const PlayerGrid = ({ players }) => {
   return (
-    <Grid columns={3}>
+    <Row gutter={30}>
       {players &&
         players.map(player =>
           player.status === "PUBLISHED" ? (
-            <Grid.Column>
-              <Card key={player.id}>
-                <Link to={`/players/${player.id}`}>
-                  <Image src="/images/user-default.svg" wrappedi={false} />
-                </Link>
-                <Card.Content>
-                  <Card.Header>{player.name}</Card.Header>
-                </Card.Content>
-
-                <Card.Content extra>
+            <Col span={8}>
+              <Card
+                actions={[
                   <Link to={`/players/${player.id}`}>
-                    <Icon name="user" /> View Profile
+                    <Icon type="profile" /> View Profile
                   </Link>
-                </Card.Content>
+                ]}
+                style={{ marginBottom: "30px" }}
+              >
+                <Meta
+                  title={player.name}
+                  description="Average Golfer"
+                  avatar={<Avatar src="/images/user-default.svg" />}
+                />
               </Card>
-            </Grid.Column>
+            </Col>
           ) : null
         )}
-    </Grid>
+    </Row>
   );
 };
 

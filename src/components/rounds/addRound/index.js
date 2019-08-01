@@ -1,9 +1,10 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Grid, Form, Select, Button } from "semantic-ui-react";
 import gql from "graphql-tag";
-import Calendar from "react-calendar";
+import { Layout, Form, Select, DatePicker, Input, Button, Icon } from "antd";
 import Players from "../../players/index";
+
+const { Content, Sider } = Layout;
 
 const GET_COURSES_Q = gql`
   {
@@ -75,60 +76,65 @@ class addRound extends React.Component {
 
   render() {
     return (
-      <Query query={GET_COURSES_Q}>
-        {({ loading, error, data }) => {
-          const { courses } = data;
+      <Layout>
+        <Query query={GET_COURSES_Q}>
+          {({ loading, error, data }) => {
+            const { courses } = data;
 
-          return (
-            <Form onSubmit={this.handleSubmit}>
-              {error ? <div>{error}</div> : null}
-              {loading ? <div>Loading...</div> : null}
-              <Grid container divided>
-                <Grid.Row>
-                  {courses && (
-                    <Grid.Column width={4}>
-                      <Form.Field
-                        control={Select}
-                        options={this.courseSelectHandler(courses)}
-                        label={{
-                          children: "Course",
-                          htmlFor: "form-select-control-course"
+            return (
+              <Form onSubmit={this.handleSubmit}>
+                {error ? <div>{error}</div> : null}
+                {loading ? <div>Loading...</div> : null}
+                <Content style={{ padding: "30px" }}>
+                  <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
+                    {courses && (
+                      <Sider
+                        width={280}
+                        style={{
+                          background: "#FFFFFF",
+                          borderRight: "1px solid #EEEEEE",
+                          paddingRight: "30px"
                         }}
-                        placeholder="Course"
-                        search
-                        searchInput={{ id: "form-select-control-course" }}
-                        required
-                      />
-                      <Form.Field>
-                        <label>Tee Date:</label>
-                        <Calendar
-                          onChange={this.onCalendarChange}
-                          value={this.state.date}
-                        />
-                      </Form.Field>
-                      <Form.Input
-                        fluid
-                        label="Tee time"
-                        placeholder="10:00"
-                        required
-                      />
-                      <Button type="submit" primary>
-                        Start round
-                      </Button>
-                    </Grid.Column>
-                  )}
-                  <Grid.Column width={12}>
-                    <Form.Field>
-                      <label>Players</label>
-                    </Form.Field>
-                    <Players layout="list" selectable />
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Form>
-          );
-        }}
-      </Query>
+                      >
+                        <Form.Item label="Course">
+                          <Select placeholder="Select course">
+                            {courses.map(course => (
+                              <option key={course.id} value={course.id}>
+                                {course.name}
+                              </option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Tee date">
+                          <DatePicker
+                            placeholder="Select date"
+                            onChange={this.onCalendarChange}
+                            value={this.state.date}
+                            style={{ width: "100%" }}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Tee time">
+                          <Input placeholder="Tee time" />
+                        </Form.Item>
+                        <Button type="primary">
+                          Start round
+                          <Icon type="right" />
+                        </Button>
+                      </Sider>
+                    )}
+                    <Content style={{ padding: "0 30px", minHeight: 400 }}>
+                      <Form.Item label="Players">
+                        <Players layout="list" selectable />
+                      </Form.Item>
+                    </Content>
+                  </Layout>
+                </Content>
+              </Form>
+            );
+          }}
+        </Query>
+      </Layout>
     );
   }
 }
