@@ -215,7 +215,7 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: key });
   }
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
 
     if (!this.state.roundComplete) return false;
@@ -227,7 +227,7 @@ class EditableTable extends React.Component {
         complete: this.state.roundComplete
       }
     });
-  }
+  };
 
   handleCompleted = e => {
     this.setState({
