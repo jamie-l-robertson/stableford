@@ -1,26 +1,40 @@
 import React, { Fragment } from "react";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withAuth } from "@okta/okta-react";
-import { Card, Button, Typography } from "antd";
+import { Card, Button, Spin } from "antd";
 
 class LoginPage extends React.Component {
   state = {
-    authenticated: false
+    authenticated: null
   };
 
   async componentDidMount() {
     const authenticated = await this.props.auth.isAuthenticated();
-
-    if (authenticated) {
-      this.props.auth.getUser().then(result => {
-        this.setState({ authenticated: true });
-      });
-    }
+    this.setState({ authenticated });
   }
+
   render() {
     return (
       <Fragment>
-        {!this.state.authenticated ? (
+        {!this.state.authenticated === null && <Spin />}
+        {this.state.authenticated === true && (
+          <Card
+            style={{
+              maxWidth: "300px",
+              margin: "auto",
+              textAlign: "center"
+            }}
+            cover={<img alt="example" src="/images/user-default.svg" />}
+            actions={[
+              <Link as={Button} to="/dashboard">
+                <Button type="primary"> Visit your dashboard</Button>
+              </Link>
+            ]}
+          >
+            <Card.Meta title="Welcome back" />
+          </Card>
+        )}
+        {this.state.authenticated === false && (
           <Card
             style={{
               maxWidth: "300px",
@@ -39,8 +53,6 @@ class LoginPage extends React.Component {
               description="Please login with your Okta account to proceed"
             />
           </Card>
-        ) : (
-          <Redirect to="/dashboard" />
         )}
       </Fragment>
     );
