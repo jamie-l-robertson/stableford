@@ -9,6 +9,7 @@ import "antd/dist/antd.css";
 import "./index.css";
 import App from "./App";
 
+// @TODO - SETUP CACHE
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT
 });
