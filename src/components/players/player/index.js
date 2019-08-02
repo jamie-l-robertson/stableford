@@ -1,38 +1,17 @@
 import React, { Fragment } from "react";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 import RoundList from "../../rounds/roundList";
 import { Layout, Card, Divider, Tag, Spin } from "antd";
+import { PLAYER_SINGLE_Q } from "../../../threads/queries";
+import RoundPerformanceChart from "./roundPerformanceChart";
 
 const { Content, Sider } = Layout;
 const { Meta } = Card;
 
-const PLAYER_Q = gql`
-  query playerInfo($playerID: ID!) {
-    player(where: { id: $playerID }) {
-      name
-      id
-      handicap
-      bio
-      mugshot {
-        url
-      }
-      rounds {
-        id
-        courses {
-          name
-        }
-        scorecard
-        complete
-      }
-    }
-  }
-`;
-
 export const Player = props => {
   const playerID = props.match.params.id;
   return (
-    <Query query={PLAYER_Q} variables={{ playerID }}>
+    <Query query={PLAYER_SINGLE_Q} variables={{ playerID }}>
       {({ loading, error, data }) => {
         const { player } = data;
 
@@ -68,12 +47,24 @@ export const Player = props => {
                       <Divider />
                       <Meta title="Handicap" description={player.handicap} />
                       <Divider />
-                      <Meta title="ID" description={[<Tag>{player.id}</Tag>]} />
+                      <Meta
+                        title="ID"
+                        description={[
+                          <Tag key={Math.random() * 1000}>{player.id}</Tag>
+                        ]}
+                      />
                     </Card>
                   </Sider>
                   <Content style={{ padding: "0 30px", minHeight: 400 }}>
                     <h2>Rounds</h2>
                     {player.rounds && <RoundList rounds={player.rounds} />}
+                    <Divider />
+                    <h2>Rounds Score Stats</h2>
+                    <RoundPerformanceChart
+                      rounds={player.rounds}
+                      playerID={player.id}
+                    />
+                    <Divider />
                   </Content>
                 </Fragment>
               )}

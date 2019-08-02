@@ -9,6 +9,8 @@ const RoundList = ({ rounds }) => {
       dataSource={rounds}
       itemLayout="horizontal"
       renderItem={round => {
+        const date = dayjs(round.teeTime).toISOString();
+
         return (
           <List.Item
             key={round.id}
@@ -24,7 +26,7 @@ const RoundList = ({ rounds }) => {
           >
             <List.Item.Meta
               title={round.courses[0].name}
-              description={dayjs(round.teeTime).format("DD/MM/YYYY - HH:MM")}
+              description={dayjs(date).format("DD/MM/YYYY, hh:mm")}
             />
             {round.complete ? (
               <Tag color="green">Complete</Tag>

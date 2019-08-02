@@ -1,23 +1,9 @@
 import React, { Fragment } from "react";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 import PlayerGrid from "./grid";
 import PlayerList from "./list";
-import { Layout } from "antd";
-
-const PLAYERS_Q = gql`
-  {
-    players(where: { status: PUBLISHED }) {
-      id
-      name
-      status
-      bio
-      mugshot {
-        url
-      }
-    }
-  }
-`;
+import { Spin } from "antd";
+import { PLAYERS_Q } from "../../threads/queries";
 
 class Players extends React.Component {
   render() {
@@ -30,7 +16,7 @@ class Players extends React.Component {
             <Fragment>
               <h2>Players</h2>
               {error ? <div>{error}</div> : null}
-              {loading ? <div>Loading...</div> : null}
+              {loading ? <Spin /> : null}
               {data.players && layout === "list" ? (
                 <PlayerList players={data.players} {...this.props} />
               ) : (

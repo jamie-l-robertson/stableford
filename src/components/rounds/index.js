@@ -1,27 +1,9 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
 import RoundList from "./roundList";
-import { PageHeader, Divider, Button, Icon } from "antd";
-
-const ROUNDS_Q = gql`
-  {
-    rounds {
-      id
-      teeTime
-      courses {
-        id
-        name
-      }
-      players {
-        name
-        handicap
-      }
-      complete
-    }
-  }
-`;
+import { PageHeader, Divider, Button, Icon, Spin } from "antd";
+import { ROUNDS_Q } from "../../threads/queries";
 
 class Rounds extends React.Component {
   render() {
@@ -30,9 +12,9 @@ class Rounds extends React.Component {
         {({ loading, error, data }) => {
           return (
             <Fragment>
+              {error ? <div>{error}</div> : null}
+              {loading ? <Spin /> : null}
               <PageHeader title="Rounds" onBack={() => window.history.back()} />
-              {error ? <li>{error}</li> : null}
-              {loading ? <li>Loading...</li> : null}
               {data.rounds && <RoundList rounds={data.rounds} />}
               <Divider />
               <Link to="/add-round">

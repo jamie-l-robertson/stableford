@@ -10,7 +10,7 @@ const PlayerGrid = ({ players }) => {
       {players &&
         players.map(player =>
           player.status === "PUBLISHED" ? (
-            <Col span={8}>
+            <Col span={8} key={Math.random() * 1000}>
               <Card
                 actions={[
                   <Link to={`/players/${player.id}`}>

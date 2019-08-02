@@ -1,22 +1,10 @@
 import React, { Fragment } from "react";
 import { Holes } from "./holes";
 import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import { Col, Row, PageHeader, Divider, Typography } from "antd";
+import { COURSE_SINGLE_Q } from "../../../threads/queries";
+import { Col, Row, PageHeader, Divider, Typography, Spin } from "antd";
 
-const { Paragraph, Title } = Typography;
-
-const COURSE_Q = gql`
-  query courseInfo($courseID: ID!) {
-    course(where: { id: $courseID }) {
-      name
-      id
-      location
-      description
-      holes
-    }
-  }
-`;
+const { Paragraph } = Typography;
 
 const Description = ({ term, children, span = 4 }) => (
   <Col span={span}>
@@ -35,12 +23,12 @@ export const Course = props => {
   return (
     <Fragment>
       {courseID && (
-        <Query query={COURSE_Q} variables={{ courseID }}>
+        <Query query={COURSE_SINGLE_Q} variables={{ courseID }}>
           {({ loading, error, data }) => {
             return (
               <React.Fragment>
                 {error ? <p>{error}</p> : null}
-                {loading ? <p>Loading...</p> : null}
+                {loading ? <Spin /> : null}
                 {data.course && (
                   <Fragment>
                     <PageHeader

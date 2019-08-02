@@ -1,50 +1,12 @@
 import React from "react";
 import { Query, withApollo } from "react-apollo";
-import gql from "graphql-tag";
 import dayjs from "dayjs";
-import { Layout, Form, Select, DatePicker, Button, Icon } from "antd";
+import { Layout, Form, Select, DatePicker, Button, Icon, Spin } from "antd";
 import Players from "../../players/index";
+import { COURSES_LIST_Q } from "../../../threads/queries";
+import { ADD_ROUND_MUTATION } from "../../../threads/mutations";
 
 const { Content, Sider } = Layout;
-const GET_COURSES_Q = gql`
-  {
-    courses {
-      id
-      name
-    }
-  }
-`;
-
-const ADD_ROUND_Q = gql`
-  mutation createRoundAndAddPlayers(
-    $courseID: ID!
-    $playerIDS: [PlayerWhereUniqueInput!]
-    $teeTime: DateTime!
-    $scorecard: Json!
-  ) {
-    createRound(
-      data: {
-        status: PUBLISHED
-        courses: { connect: { id: $courseID } }
-        players: { connect: $playerIDS }
-        scorecard: $scorecard
-        teeTime: $teeTime
-      }
-    ) {
-      id
-      status
-      scorecard
-      courses {
-        id
-        name
-      }
-      players {
-        name
-        id
-      }
-    }
-  }
-`;
 
 class addRound extends React.Component {
   state = {
@@ -93,7 +55,7 @@ class addRound extends React.Component {
 
       this.props.client
         .mutate({
-          mutation: ADD_ROUND_Q,
+          mutation: ADD_ROUND_MUTATION,
           variables: {
             courseID: values.courseID,
             playerIDS: players,
@@ -139,7 +101,7 @@ class addRound extends React.Component {
 
   render() {
     return (
-      <Query query={GET_COURSES_Q}>
+      <Query query={COURSES_LIST_Q}>
         {({ loading, error, data }) => {
           const { courses } = data;
           const { getFieldDecorator } = this.props.form;
@@ -147,7 +109,7 @@ class addRound extends React.Component {
           return (
             <Form onSubmit={this.handleSubmit}>
               {error ? <div>{error}</div> : null}
-              {loading ? <div>Loading...</div> : null}
+              {loading ? <Spin /> : null}
               <Content>
                 <Layout style={{ background: "#FFFFFF" }}>
                   {courses && (

@@ -1,31 +1,16 @@
 import React, { Fragment } from "react";
 import { Query, withApollo } from "react-apollo";
-import gql from "graphql-tag";
-import { Input, Popconfirm, Form, Icon } from "antd";
+import calculateStablefordScore from "../../../helpers/stableford";
+
+import { Input, Popconfirm, Form, Icon, Spin } from "antd";
+import { ROUND_SINGLE_Q } from "../../../threads/queries";
+import {
+  UPDATE_ROUND_MUTATION,
+  UPDATE_SCORECARD
+} from "../../../threads/mutations";
 
 import RoundHeader from "./header";
 import ScoreCard from "./scorecard";
-
-const ROUND_Q = gql`
-  query roundInfo($roundID: ID!) {
-    round(where: { id: $roundID }) {
-      teeTime
-      scorecard
-      courses {
-        name
-        id
-        holes
-      }
-      players {
-        id
-        name
-        handicap
-        status
-      }
-      complete
-    }
-  }
-`;
 
 const EditableContext = React.createContext();
 
@@ -97,14 +82,24 @@ class EditableTable extends React.Component {
       });
     }
 
-    this.columns.push({
-      title: "Total",
-      dataIndex: "total",
-      key: "total",
-      defaultSortOrder: "ascend",
-      sorter: (a, b) => a.total - b.total,
-      align: "right"
-    });
+    this.columns.push(
+      {
+        title: "Total",
+        dataIndex: "total",
+        key: "total",
+        defaultSortOrder: "ascend",
+        sorter: (a, b) => a.total - b.total,
+        align: "center"
+      },
+      {
+        title: "Stableford",
+        dataIndex: "stableford",
+        key: "stableford",
+        defaultSortOrder: "ascend",
+        sorter: (a, b) => a.stableford - b.stableford,
+        align: "center"
+      }
+    );
 
     this.columns.push({
       title: "",
@@ -160,12 +155,15 @@ class EditableTable extends React.Component {
 
       const currentData = { ...this.state.data };
       const round = currentData.round;
+      let holeArray = [];
+      let strokes = [];
 
       const index = round.scorecard.findIndex(item => key === item.key);
       const rowData = [];
       let score = 0;
 
       for (var i = 0; i < row.hole.length; i++) {
+        strokes.push(parseInt(row.hole[i].putts, 10));
         score += parseInt(row.hole[i].putts, 10);
 
         rowData.push({
@@ -174,12 +172,23 @@ class EditableTable extends React.Component {
         });
       }
 
+      round.courses[0].holes.items.map(hole => {
+        holeArray.push([parseInt(hole.par, 10), parseInt(hole.index, 10)]);
+      });
+
+      const stablefordTotal = calculateStablefordScore(
+        round.players[index].handicap,
+        strokes,
+        holeArray
+      );
+
       const scorecardData = {
         key: index,
         id: round.players[index].id,
         name: round.scorecard[index].name,
         hole: rowData,
-        total: score
+        total: score,
+        stableford: stablefordTotal
       };
 
       const item = round.scorecard[index];
@@ -193,14 +202,7 @@ class EditableTable extends React.Component {
       this.setState({ editingKey: "" });
 
       this.props.client.mutate({
-        mutation: gql`
-          mutation upateScorecard($id: ID, $scorecard: Json) {
-            updateRound(where: { id: $id }, data: { scorecard: $scorecard }) {
-              id
-              scorecard
-            }
-          }
-        `,
+        mutation: UPDATE_ROUND_MUTATION,
         variables: {
           id: this.props.match.params.id,
           scorecard: round.scorecard
@@ -219,13 +221,7 @@ class EditableTable extends React.Component {
     if (!this.state.roundComplete) return false;
 
     this.props.client.mutate({
-      mutation: gql`
-        mutation upateScorecard($id: ID, $complete: Boolean) {
-          updateRound(where: { id: $id }, data: { complete: $complete }) {
-            id
-          }
-        }
-      `,
+      mutation: UPDATE_SCORECARD,
       variables: {
         id: this.props.match.params.id,
         complete: this.state.roundComplete
@@ -266,7 +262,7 @@ class EditableTable extends React.Component {
 
     return (
       <Query
-        query={ROUND_Q}
+        query={ROUND_SINGLE_Q}
         variables={{ roundID }}
         onCompleted={data => this.setState({ data })}
         fetchPolicy="cache-and-network"
@@ -276,7 +272,7 @@ class EditableTable extends React.Component {
           return (
             <EditableContext.Provider value={this.props.form}>
               {error ? <div>{error}</div> : null}
-              {loading ? <div>{loading}</div> : null}
+              {loading ? <Spin /> : null}
               {data.round && (
                 <Fragment>
                   <RoundHeader
@@ -284,13 +280,13 @@ class EditableTable extends React.Component {
                     ID={roundID}
                     {...this.props}
                   />
-
                   <ScoreCard
                     round={data.round}
                     components={components}
                     columns={columns}
                     handleCompleted={this.handleCompleted}
                     handleSubmit={this.handleSubmit}
+                    allowSubmission={this.state.roundComplete}
                   />
                 </Fragment>
               )}

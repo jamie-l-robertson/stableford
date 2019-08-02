@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout, Menu, Icon } from "antd";
 
-const { Header, Content, Footer } = Layout;
+const { Header } = Layout;
 const navItems = [
   {
     url: "/players",

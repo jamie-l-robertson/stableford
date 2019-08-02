@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Layout, List, Divider, Button, Icon } from "antd";
+import { Layout } from "antd";
 import Navigation from "./components/nav";
 import { Courses } from "./components/courses";
 import { Course } from "./components/courses/course";
@@ -11,7 +11,7 @@ import { Round } from "./components/rounds/round";
 import addRound from "./components/rounds/addRound";
 import { NotFound } from "./components/NotFound";
 
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
 class App extends Component {
   // Add offline data persistance
@@ -41,6 +41,9 @@ class App extends Component {
                   </Switch>
                 </Layout>
               </Content>
+              <Footer style={{ textAlign: "center" }}>
+                Created by Jamie Robertson ©2019
+              </Footer>
             </Layout>
           </div>
         </Router>

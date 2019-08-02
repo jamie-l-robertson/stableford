@@ -6,14 +6,14 @@ const ScoreCard = ({
   columns,
   round,
   handleSubmit,
-  handleCompleted
+  handleCompleted,
+  allowSubmission
 }) => {
   return (
     <Table
       components={components}
       bordered
       dataSource={round.scorecard}
-      bordered
       columns={columns}
       rowClassName="editable-row"
       pagination={false}
@@ -24,7 +24,11 @@ const ScoreCard = ({
             <Col span={24} style={{ textAlign: "right" }}>
               <Checkbox onChange={handleCompleted}>Finish</Checkbox>
               {/* Hook up final submission */}
-              <Button type="primary" onClick={e => handleSubmit(e)}>
+              <Button
+                type="primary"
+                onClick={e => handleSubmit(e)}
+                disabled={!allowSubmission}
+              >
                 Submit <Icon type="save" />
               </Button>
             </Col>
