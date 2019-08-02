@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { SecureRoute, ImplicitCallback } from "@okta/okta-react";
 import { Layout } from "antd";
 import Navigation from "./components/nav";
 import { Courses } from "./components/courses";
@@ -10,6 +11,7 @@ import Rounds from "./components/rounds";
 import { Round } from "./components/rounds/round";
 import addRound from "./components/rounds/addRound";
 import { NotFound } from "./components/NotFound";
+import LoginPage from "./components/login";
 
 const { Content, Footer } = Layout;
 
@@ -26,17 +28,22 @@ class App extends Component {
               <Content style={{ padding: "30px" }}>
                 <Layout style={{ padding: "30px", background: "#FFFFFF" }}>
                   <Switch>
-                    <Route
+                    <Route exact path="/" component={LoginPage} />
+                    <SecureRoute
                       exact
-                      path={process.env.PUBLIC_URL + "/"}
+                      path={process.env.PUBLIC_URL + "/dashboard"}
                       component={Courses}
                     />
-                    <Route exact path="/courses/:id" component={Course} />
-                    <Route exact path="/players" component={Players} />
-                    <Route exact path="/players/:id" component={Player} />
-                    <Route exact path="/rounds" component={Rounds} />
-                    <Route exact path="/round/:id" component={Round} />
-                    <Route exact path="/add-round" component={addRound} />
+                    <SecureRoute exact path="/courses/:id" component={Course} />
+                    <SecureRoute exact path="/players" component={Players} />
+                    <SecureRoute exact path="/players/:id" component={Player} />
+                    <SecureRoute exact path="/rounds" component={Rounds} />
+                    <SecureRoute exact path="/round/:id" component={Round} />
+                    <SecureRoute exact path="/add-round" component={addRound} />
+                    <Route
+                      path="/implicit/callback"
+                      component={ImplicitCallback}
+                    />
                     <Route component={NotFound} />
                   </Switch>
                 </Layout>
