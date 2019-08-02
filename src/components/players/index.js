@@ -3,17 +3,18 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import PlayerGrid from "./grid";
 import PlayerList from "./list";
-
-import { Layout, List } from "antd";
-const { Content } = Layout;
+import { Layout } from "antd";
 
 const PLAYERS_Q = gql`
   {
-    players {
+    players(where: { status: PUBLISHED }) {
       id
       name
       status
       bio
+      mugshot {
+        url
+      }
     }
   }
 `;
@@ -24,6 +25,7 @@ class Players extends React.Component {
       <Query query={PLAYERS_Q}>
         {({ loading, error, data }) => {
           const { layout } = this.props;
+
           return (
             <Fragment>
               <h2>Players</h2>

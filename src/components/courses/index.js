@@ -2,13 +2,11 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-
 import { Layout, List, Avatar } from "antd";
-const { Content } = Layout;
 
 const COURSES_Q = gql`
   {
-    courses {
+    courses(where: { status: PUBLISHED }) {
       id
       name
       location
@@ -19,7 +17,7 @@ const COURSES_Q = gql`
 export const Courses = props => {
   return (
     <Query query={COURSES_Q}>
-      {({ loading, error, data }) => {
+      {({ data }) => {
         return (
           <Fragment>
             <h2>Courses</h2>

@@ -11,17 +11,24 @@ const columns = [
   {
     title: "Par",
     dataIndex: "par",
-    key: "par"
+    key: "par",
+    align: "center"
   },
   {
     title: "Stroke Index",
     dataIndex: "index",
-    key: "strokeIndex"
+    key: "strokeIndex",
+    align: "center"
   }
 ];
 
 export const Holes = props => {
   return (
-    <Table columns={columns} dataSource={props.data.items} pagination={false} />
+    <Table
+      columns={columns}
+      dataSource={props.data.items}
+      pagination={false}
+      bordered
+    />
   );
 };

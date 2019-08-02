@@ -21,8 +21,15 @@ const PlayerGrid = ({ players }) => {
               >
                 <Meta
                   title={player.name}
-                  description="Average Golfer"
-                  avatar={<Avatar src="/images/user-default.svg" />}
+                  description={player.bio}
+                  avatar={
+                    <Avatar
+                      src={
+                        (player.mugshot && player.mugshot.url) ||
+                        "/images/user-default.svg"
+                      }
+                    />
+                  }
                 />
               </Card>
             </Col>

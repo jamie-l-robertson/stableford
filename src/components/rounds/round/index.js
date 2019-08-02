@@ -1,20 +1,10 @@
 import React, { Fragment } from "react";
 import { Query, withApollo } from "react-apollo";
 import gql from "graphql-tag";
-import {
-  Row,
-  Col,
-  PageHeader,
-  Table,
-  Input,
-  Popconfirm,
-  Form,
-  Divider,
-  Icon,
-  Checkbox,
-  Button,
-  Tag
-} from "antd";
+import { Input, Popconfirm, Form, Icon } from "antd";
+
+import RoundHeader from "./header";
+import ScoreCard from "./scorecard";
 
 const ROUND_Q = gql`
   query roundInfo($roundID: ID!) {
@@ -283,53 +273,24 @@ class EditableTable extends React.Component {
         errorPolicy="ignore"
       >
         {({ loading, error, data }) => {
-          console.log(data);
           return (
             <EditableContext.Provider value={this.props.form}>
               {error ? <div>{error}</div> : null}
               {loading ? <div>{loading}</div> : null}
               {data.round && (
                 <Fragment>
-                  <PageHeader
-                    onBack={() => window.history.back()}
-                    title={data.round.courses[0].name}
-                    subTitle={`Date: ${new Date(data.round.teeTime)}`}
-                    extra={[
-                      <Tag
-                        color={`${data.round.complete ? "green" : "orange"}`}
-                      >
-                        {data.round.complete ? "Complete" : "In progress"}
-                      </Tag>,
-                      <Tag>{roundID}</Tag>
-                    ]}
+                  <RoundHeader
+                    round={data.round}
+                    ID={roundID}
+                    {...this.props}
                   />
-                  <Divider />
-                  <Table
+
+                  <ScoreCard
+                    round={data.round}
                     components={components}
-                    bordered
-                    dataSource={data.round.scorecard}
-                    bordered
                     columns={columns}
-                    rowClassName="editable-row"
-                    pagination={false}
-                    footer={() => {
-                      return (
-                        <Row>
-                          <Col span={24} style={{ textAlign: "right" }}>
-                            <Checkbox onChange={this.handleCompleted}>
-                              Finish
-                            </Checkbox>
-                            {/* Hook up final submission */}
-                            <Button
-                              type="primary"
-                              onClick={e => this.handleSubmit(e)}
-                            >
-                              Submit <Icon type="save" />
-                            </Button>
-                          </Col>
-                        </Row>
-                      );
-                    }}
+                    handleCompleted={this.handleCompleted}
+                    handleSubmit={this.handleSubmit}
                   />
                 </Fragment>
               )}

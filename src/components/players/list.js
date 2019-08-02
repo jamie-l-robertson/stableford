@@ -1,7 +1,12 @@
 import React from "react";
 import { List, Avatar, Checkbox } from "antd";
 
-const PlayerList = ({ players, selectable = false, ...props }) => {
+const PlayerList = ({
+  players,
+  selectable = false,
+  handleSelected,
+  ...props
+}) => {
   return (
     <List
       dataSource={players}
@@ -10,10 +15,27 @@ const PlayerList = ({ players, selectable = false, ...props }) => {
         player.status === "PUBLISHED" ? (
           <List.Item
             key={player.id}
-            actions={selectable && [<Checkbox>Playing</Checkbox>]}
+            actions={
+              selectable && [
+                <Checkbox
+                  onChange={handleSelected}
+                  playerID={player.id}
+                  playerName={player.name}
+                >
+                  Playing
+                </Checkbox>
+              ]
+            }
           >
             <List.Item.Meta
-              avatar={<Avatar src="images/user-default.svg" />}
+              avatar={
+                <Avatar
+                  src={
+                    (player.mugshot && player.mugshot.url) ||
+                    "/images/user-default.svg"
+                  }
+                />
+              }
               description={player.name}
             />
           </List.Item>
