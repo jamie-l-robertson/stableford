@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import { List, Icon, Tag } from "antd";
 
-const RoundList = ({ rounds }) => {
+const RoundList = ({ rounds, limit = 0 }) => {
+  const roundData = limit > 0 ? rounds.slice(0, limit) : rounds;
+
   return (
     <List
-      dataSource={rounds}
+      dataSource={roundData}
       itemLayout="horizontal"
       renderItem={round => {
         const date = dayjs(round.teeTime).toISOString();

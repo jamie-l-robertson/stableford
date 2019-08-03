@@ -27,7 +27,7 @@ class LoginPage extends React.Component {
             cover={<img alt="example" src="/images/user-default.svg" />}
             actions={[
               <Link as={Button} to="/dashboard">
-                <Button type="primary"> Visit your dashboard</Button>
+                <Button type="primary">Proceed to dashboard</Button>
               </Link>
             ]}
           >

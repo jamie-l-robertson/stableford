@@ -1,9 +1,11 @@
 import React, { Fragment } from "react";
 import { Query } from "react-apollo";
 import RoundList from "../../rounds/roundList";
-import { Layout, Card, Divider, Tag, Spin } from "antd";
+import { Row, Col, Layout, Card, Divider, Tag, Spin, Statistic } from "antd";
 import { PLAYER_SINGLE_Q } from "../../../threads/queries";
 import RoundPerformanceChart from "./roundPerformanceChart";
+import AverageScoreChart from "./averageScoreChart";
+import BestScoreChart from "./bestScoreChart";
 
 const { Content, Sider } = Layout;
 const { Meta } = Card;
@@ -56,15 +58,37 @@ export const Player = props => {
                     </Card>
                   </Sider>
                   <Content style={{ padding: "0 30px", minHeight: 400 }}>
-                    <h2>Rounds</h2>
-                    {player.rounds && <RoundList rounds={player.rounds} />}
+                    {player.rounds && (
+                      <Card title="Recent Rounds">
+                        <RoundList rounds={player.rounds} limit={5} />
+                      </Card>
+                    )}
                     <Divider />
-                    <h2>Rounds Score Stats</h2>
-                    <RoundPerformanceChart
-                      rounds={player.rounds}
-                      playerID={player.id}
-                    />
-                    <Divider />
+                    <Row gutter={16}>
+                      <Col span={12}>
+                        <Card title="Round Scores">
+                          <RoundPerformanceChart
+                            rounds={player.rounds}
+                            playerID={player.id}
+                          />
+                        </Card>
+                      </Col>
+                      <Col span={12}>
+                        <Card title="Average Scores">
+                          <AverageScoreChart
+                            rounds={player.rounds}
+                            playerID={player.id}
+                          />
+                        </Card>
+                        <Divider />
+                        <Card title="Best Scores">
+                          <BestScoreChart
+                            rounds={player.rounds}
+                            playerID={player.id}
+                          />
+                        </Card>
+                      </Col>
+                    </Row>
                   </Content>
                 </Fragment>
               )}
