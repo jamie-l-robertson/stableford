@@ -1,7 +1,18 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Query, withApollo } from "react-apollo";
 import dayjs from "dayjs";
-import { Layout, Form, Select, DatePicker, Button, Icon, Spin } from "antd";
+import {
+  Row,
+  Divider,
+  Layout,
+  Form,
+  Select,
+  DatePicker,
+  Button,
+  Icon,
+  Spin,
+  PageHeader
+} from "antd";
 import Players from "../../players/index";
 import { COURSES_LIST_Q } from "../../../threads/queries";
 import { ADD_ROUND_MUTATION } from "../../../threads/mutations";
@@ -110,6 +121,15 @@ class addRound extends React.Component {
             <Form onSubmit={this.handleSubmit}>
               {error ? <div>{error}</div> : null}
               {loading ? <Spin /> : null}
+              <Fragment>
+                <Row gutter={30}>
+                  <PageHeader
+                    onBack={() => window.history.back()}
+                    title="Add Round"
+                  />
+                </Row>
+                <Divider />
+              </Fragment>
               <Content>
                 <Layout style={{ background: "#FFFFFF" }}>
                   {courses && (
@@ -166,11 +186,12 @@ class addRound extends React.Component {
                     </Sider>
                   )}
                   <Content style={{ padding: "0 30px", minHeight: 400 }}>
-                    <Form.Item label="Players">
+                    <Form.Item>
                       <Players
                         layout="list"
                         handleSelected={this.handleSelected}
                         selectable
+                        noHeader
                       />
                     </Form.Item>
                   </Content>

@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Query } from "react-apollo";
 import PlayerGrid from "./grid";
 import PlayerList from "./list";
-import { Spin } from "antd";
+import { Row, PageHeader, Spin, Divider } from "antd";
 import { PLAYERS_Q } from "../../threads/queries";
 
 class Players extends React.Component {
@@ -14,14 +14,26 @@ class Players extends React.Component {
 
           return (
             <Fragment>
-              <h2>Players</h2>
-              {error ? <div>{error}</div> : null}
-              {loading ? <Spin /> : null}
-              {data.players && layout === "list" ? (
-                <PlayerList players={data.players} {...this.props} />
-              ) : (
-                <PlayerGrid players={data.players} {...this.props} />
+              {!this.props.noHeader && (
+                <Fragment>
+                  <Row gutter={30}>
+                    <PageHeader
+                      onBack={() => window.history.back()}
+                      title="Players"
+                    />
+                  </Row>
+                  <Divider />
+                </Fragment>
               )}
+              <Row gutter={30}>
+                {error ? <div>{error}</div> : null}
+                {loading ? <Spin /> : null}
+                {data.players && layout === "list" ? (
+                  <PlayerList players={data.players} {...this.props} />
+                ) : (
+                  <PlayerGrid players={data.players} {...this.props} />
+                )}
+              </Row>
             </Fragment>
           );
         }}

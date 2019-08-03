@@ -1,12 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Card, Icon, Avatar } from "antd";
+import { Col, Card, Icon, Avatar } from "antd";
 
 const { Meta } = Card;
 
 const PlayerGrid = ({ players }) => {
   return (
-    <Row gutter={30}>
+    <Fragment>
       {players &&
         players.map(player =>
           player.status === "PUBLISHED" ? (
@@ -14,7 +14,7 @@ const PlayerGrid = ({ players }) => {
               <Card
                 actions={[
                   <Link to={`/players/${player.id}`}>
-                    <Icon type="profile" /> View Profile
+                    <Icon type="profile" /> View Player Profile
                   </Link>
                 ]}
                 style={{ marginBottom: "30px" }}
@@ -35,7 +35,7 @@ const PlayerGrid = ({ players }) => {
             </Col>
           ) : null
         )}
-    </Row>
+    </Fragment>
   );
 };
 

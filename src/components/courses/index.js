@@ -1,69 +1,52 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { Query } from "react-apollo";
-import { List, Avatar, Divider, Typography, Button } from "antd";
+import { Row, Col, Card, PageHeader, Icon, Divider } from "antd";
+
 import { COURSES_LIST_Q } from "../../threads/queries";
 
-const { Title, Paragraph } = Typography;
-
-export const Courses = props => {
+const Courses = props => {
   return (
     <Query query={COURSES_LIST_Q}>
       {({ data }) => {
+        const { courses } = data;
+
         return (
           <Fragment>
-            <Title>Welcome to Stableford</Title>
-            <Paragraph>
-              Webapp is currently still in Alpha, we welcome any{" "}
-              <a href="mailto: jrobertson_uk@msn.com">feedback</a>
-            </Paragraph>
-            <Divider />
-            <h2>What would you like to do?</h2>
-            <List bordered>
-              <List.Item>
-                <Link to="/rounds">
-                  <Button>View rounds</Button>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/add-round">
-                  <Button>Start a new round </Button>
-                </Link>
-              </List.Item>
-              <List.Item>
-                <Link to="/players">
-                  <Button>View Players</Button>
-                </Link>
-              </List.Item>
-            </List>
+            <Row gutter={30}>
+              <PageHeader
+                onBack={() => window.history.back()}
+                title="Courses"
+              />
+            </Row>
 
             <Divider />
-            <h2>Active Courses</h2>
-            <List
-              dataSource={data.courses}
-              itemLayout="horizontal"
-              renderItem={course => (
-                <List.Item
-                  key={course.id}
-                  actions={[
-                    <Link to={`/courses/${course.id}`}>
-                      <Button>Course detail</Button>
-                    </Link>
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={
-                      <Link to={`/courses/${course.id}`}>{course.name}</Link>
-                    }
-                    description={course.location}
-                    avatar={<Avatar src="images/user-default.svg" />}
-                  />
-                </List.Item>
-              )}
-            />
+            <Row gutter={30}>
+              {courses &&
+                courses.map(course => (
+                  <Col span={8} key={Math.random() * 1000}>
+                    <Card
+                      actions={[
+                        <Link to={`/courses/${course.id}`}>
+                          <Icon type="bank" /> View Course details
+                        </Link>
+                      ]}
+                      style={{ marginBottom: "30px" }}
+                    >
+                      <Card.Meta
+                        title={course.name}
+                        description={course.location}
+                        avatar={<Icon type="global" />}
+                      />
+                    </Card>
+                  </Col>
+                ))}
+            </Row>
           </Fragment>
         );
       }}
     </Query>
   );
 };
+
+export default Courses;

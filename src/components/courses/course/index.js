@@ -26,15 +26,17 @@ export const Course = props => {
         <Query query={COURSE_SINGLE_Q} variables={{ courseID }}>
           {({ loading, error, data }) => {
             return (
-              <React.Fragment>
+              <Row>
                 {error ? <p>{error}</p> : null}
                 {loading ? <Spin /> : null}
                 {data.course && (
                   <Fragment>
-                    <PageHeader
-                      onBack={() => window.history.back()}
-                      title={data.course.name}
-                    />
+                    <Row gutter={30}>
+                      <PageHeader
+                        onBack={() => window.history.back()}
+                        title={data.course.name}
+                      />
+                    </Row>
                     <Divider />
                     <Row>
                       <Description term="Course ID">{courseID}</Description>
@@ -62,7 +64,7 @@ export const Course = props => {
                     )}
                   </Fragment>
                 )}
-              </React.Fragment>
+              </Row>
             );
           }}
         </Query>

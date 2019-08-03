@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { SecureRoute, ImplicitCallback } from "@okta/okta-react";
 import { Layout } from "antd";
 import Navigation from "./components/nav";
-import { Courses } from "./components/courses";
+import Dashboard from "./components/dashboard";
+import Courses from "./components/courses";
 import { Course } from "./components/courses/course";
 import Players from "./components/players";
 import { Player } from "./components/players/player";
@@ -18,6 +19,7 @@ const { Content, Footer } = Layout;
 class App extends Component {
   // Add offline data persistance
   // Make it pretty
+
   render() {
     return (
       <div className="App">
@@ -32,8 +34,9 @@ class App extends Component {
                     <SecureRoute
                       exact
                       path={process.env.PUBLIC_URL + "/dashboard"}
-                      component={Courses}
+                      component={Dashboard}
                     />
+                    <SecureRoute exact path="/courses" component={Courses} />
                     <SecureRoute exact path="/courses/:id" component={Course} />
                     <SecureRoute exact path="/players" component={Players} />
                     <SecureRoute exact path="/players/:id" component={Player} />

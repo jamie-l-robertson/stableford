@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Query } from "react-apollo";
 import RoundList from "../../rounds/roundList";
-import { Row, Col, Layout, Card, Divider, Tag, Spin, Statistic } from "antd";
+import { Row, Col, Layout, Card, Divider, PageHeader, Spin } from "antd";
 import { PLAYER_SINGLE_Q } from "../../../threads/queries";
 import RoundPerformanceChart from "./roundPerformanceChart";
 import AverageScoreChart from "./averageScoreChart";
@@ -18,82 +18,88 @@ export const Player = props => {
         const { player } = data;
 
         return (
-          <Content>
-            <Layout style={{ background: "#FFFFFF" }}>
-              {error ? <p>{error}</p> : null}
-              {loading ? <Spin /> : null}
-              {player && (
-                <Fragment>
-                  <Sider
-                    width={280}
-                    style={{
-                      background: "#FFFFFF",
-                      borderRight: "1px solid #EEEEEE",
-                      paddingRight: "30px"
-                    }}
-                  >
-                    <Card
-                      cover={
-                        <img
-                          alt={player.name}
-                          src={
-                            (player.mugshot && player.mugshot.url) ||
-                            "/images/user-default.svg"
-                          }
-                        />
-                      }
+          <Fragment>
+            {player && (
+              <Fragment>
+                <Row gutter={30}>
+                  <PageHeader
+                    onBack={() => window.history.back()}
+                    title={player.name}
+                  />
+                </Row>
+                <Divider />
+              </Fragment>
+            )}
+            <Content>
+              <Layout style={{ background: "#FFFFFF" }}>
+                {error ? <p>{error}</p> : null}
+                {loading ? <Spin /> : null}
+                {player && (
+                  <Fragment>
+                    <Sider
+                      width={280}
+                      style={{
+                        background: "#FFFFFF",
+                        borderRight: "1px solid #EEEEEE",
+                        paddingRight: "30px"
+                      }}
                     >
-                      <Meta title={player.name} />
-                      <Divider />
-                      <Meta title="Bio" description={player.bio} />
-                      <Divider />
-                      <Meta title="Handicap" description={player.handicap} />
-                      <Divider />
-                      <Meta
-                        title="ID"
-                        description={[
-                          <Tag key={Math.random() * 1000}>{player.id}</Tag>
-                        ]}
-                      />
-                    </Card>
-                  </Sider>
-                  <Content style={{ padding: "0 30px", minHeight: 400 }}>
-                    {player.rounds && (
-                      <Card title="Recent Rounds">
-                        <RoundList rounds={player.rounds} limit={5} />
-                      </Card>
-                    )}
-                    <Divider />
-                    <Row gutter={16}>
-                      <Col span={12}>
-                        <Card title="Round Scores">
-                          <RoundPerformanceChart
-                            rounds={player.rounds}
-                            playerID={player.id}
+                      <Card
+                        cover={
+                          <img
+                            alt={player.name}
+                            src={
+                              (player.mugshot && player.mugshot.url) ||
+                              "/images/user-default.svg"
+                            }
                           />
-                        </Card>
-                      </Col>
-                      <Col span={12}>
-                        <Card title="Average Scores">
-                          <AverageScoreChart
-                            rounds={player.rounds}
-                            playerID={player.id}
-                          />
-                        </Card>
+                        }
+                      >
+                        <Meta title={player.name} />
                         <Divider />
-                        <Card title="Best Scores">
-                          <BestScoreChart
-                            rounds={player.rounds}
-                            playerID={player.id}
-                          />
+                        <Meta title="Bio" description={player.bio} />
+                        <Divider />
+                        <Meta title="Handicap" description={player.handicap} />
+                      </Card>
+                    </Sider>
+                    <Content style={{ padding: "0 0 0 30px", minHeight: 400 }}>
+                      {player.rounds && (
+                        <Card title="Recent Rounds">
+                          <RoundList rounds={player.rounds} limit={5} />
                         </Card>
-                      </Col>
-                    </Row>
-                  </Content>
-                </Fragment>
-              )}
-            </Layout>
-          </Content>
+                      )}
+                      <Divider />
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Card title="Round Scores">
+                            <RoundPerformanceChart
+                              rounds={player.rounds}
+                              playerID={player.id}
+                            />
+                          </Card>
+                        </Col>
+                        <Col span={12}>
+                          <Card title="Average Scores">
+                            <AverageScoreChart
+                              rounds={player.rounds}
+                              playerID={player.id}
+                            />
+                          </Card>
+                          <Divider />
+                          <Card title="Best Scores">
+                            <BestScoreChart
+                              rounds={player.rounds}
+                              playerID={player.id}
+                            />
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Content>
+                  </Fragment>
+                )}
+              </Layout>
+            </Content>
+          </Fragment>
         );
       }}
     </Query>
