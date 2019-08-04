@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { withAuth } from "@okta/okta-react";
-import { Query } from "react-apollo";
+import { TwoColumn } from '../../layout';
 
 import {
   Row,
@@ -55,7 +55,6 @@ const Dashboard = props => {
           ]}
         />
       </Row>
-      <Divider />
       <List
         grid={{ gutter: 30, column: 3 }}
         dataSource={data}

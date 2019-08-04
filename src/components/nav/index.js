@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { withAuth } from "@okta/okta-react";
 import { Layout, Menu, Icon, Button } from "antd";
 
 const { Header } = Layout;
@@ -30,30 +29,6 @@ const LogoStyle = {
   float: "left"
 };
 
-// const Navigation = props => {
-//   return (
-//     <Header>
-//       <Link to="/">
-//         <div className="logo" style={LogoStyle} />
-//       </Link>
-//       <Menu
-//         theme="dark"
-//         mode="horizontal"
-//         style={{ lineHeight: "64px", float: "right" }}
-//       >
-//         {navItems.map((item, i) => (
-//           <Menu.Item key={i}>
-//             <Link to={item.url}>
-//               <Icon type={item.icon} />
-//               {item.text}
-//             </Link>
-//           </Menu.Item>
-//         ))}
-//       </Menu>
-//     </Header>
-//   );
-// };
-
 class Navigation extends React.Component {
   render() {
     return (
@@ -80,4 +55,4 @@ class Navigation extends React.Component {
   }
 }
 
-export default withAuth(Navigation);
+export default Navigation;
