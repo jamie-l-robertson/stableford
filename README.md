@@ -2,13 +2,19 @@
 
 # Stableford golf app
 
-Golf app used to manage players, courses and rounds, based on Stableford rules and built using React and GraphQL, Content managed by GraphCMS, Authentication provied by Okta.
+Golf app used to manage players, courses and rounds, based on Stableford rules and built using:
+
+- React
+- GraphQL
+- Content managed by GraphCMS
+- Authentication provied by Okta.
+- Imagery managed by Cloundary(Coming soon)
 
 ## Requirements
 
 - Node v10 or greater
-- GraphCMS Account
-- Okta Account
+- GraphCMS Account, valid schema and API access
+- Okta Account with API access
 
 ## Setup
 
@@ -31,8 +37,11 @@ Deployment is handled by Netlify CI.
 
 This is a personal project and a work in progress, the following key elements still need development.
 
-- Standalone Course listing
+- Improve login experience
+- Improve layout reusability
 - Round Leaderboard
 - Cloudinary for image management
+- Add ability Add/Edit Players profiles/Courses
+- Site stats (Users, visits etc) + GA tacking
 - Tests
-- Branding
+- Custom branding

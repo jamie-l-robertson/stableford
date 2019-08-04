@@ -79,14 +79,14 @@ export const Player = props => {
                           </Card>
                         </Col>
                         <Col span={12}>
-                          <Card title="Average Scores">
+                          <Card title="Average Score">
                             <AverageScoreChart
                               rounds={player.rounds}
                               playerID={player.id}
                             />
                           </Card>
                           <Divider />
-                          <Card title="Best Scores">
+                          <Card title="Best Score">
                             <BestScoreChart
                               rounds={player.rounds}
                               playerID={player.id}
