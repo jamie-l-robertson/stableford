@@ -71,6 +71,15 @@ const ROUND_SINGLE_Q = gql`
   }
 `;
 
+const COMPETITIONS_Q = gql`
+  {
+    competitions {
+      id
+      name
+    }
+  }
+`;
+
 const PLAYERS_Q = gql`
   {
     players(where: { status: PUBLISHED }) {
@@ -111,6 +120,7 @@ export {
   COURSES_LIST_Q,
   COURSE_SINGLE_Q,
   ROUNDS_Q,
+  COMPETITIONS_Q,
   ROUND_SINGLE_Q,
   PLAYERS_Q,
   PLAYER_SINGLE_Q
