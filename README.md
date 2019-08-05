@@ -37,6 +37,7 @@ Deployment is handled by Netlify CI.
 
 This is a personal project and a work in progress, the following key elements still need development.
 
+- Add Competitions area
 - Improve login experience
 - Improve layout reusability
 - Round Leaderboard

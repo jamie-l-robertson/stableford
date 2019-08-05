@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Query } from "react-apollo";
-import { Row, Layout, Divider, PageHeader, Spin } from "antd";
+import { Row, Divider, PageHeader, Spin } from "antd";
 import { TwoColumn } from '../../../layout';
 import { PLAYER_SINGLE_Q } from "../../../threads/queries";
 import ProfileCard from './profileCard';

@@ -45,8 +45,8 @@ class EditableCell extends React.Component {
             })(this.getInput())}
           </Form.Item>
         ) : (
-          children
-        )}
+            children
+          )}
       </td>
     );
   };
@@ -131,10 +131,10 @@ class EditableTable extends React.Component {
             </Popconfirm>
           </span>
         ) : (
-          <a disabled={editingKey !== ""} onClick={() => this.edit(record.key)}>
-            <Icon type="edit" />
-          </a>
-        );
+            <a disabled={editingKey !== ""} onClick={() => this.edit(record.key)}>
+              <Icon type="edit" />
+            </a>
+          );
       }
     });
   }
@@ -269,6 +269,7 @@ class EditableTable extends React.Component {
         errorPolicy="ignore"
       >
         {({ loading, error, data }) => {
+          console.log(data);
           return (
             <EditableContext.Provider value={this.props.form}>
               {error ? <div>{error}</div> : null}

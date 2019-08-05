@@ -18,6 +18,11 @@ const navItems = [
     url: "/rounds",
     text: "Rounds",
     icon: "database"
+  },
+  {
+    url: "/competitions",
+    text: "Competitions",
+    icon: "trophy"
   }
 ];
 

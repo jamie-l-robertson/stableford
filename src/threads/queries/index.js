@@ -2,10 +2,16 @@ import gql from "graphql-tag";
 
 const COURSES_LIST_Q = gql`
   {
-    courses(where: { status: PUBLISHED }) {
+    courses(where: {status: PUBLISHED}) {
       id
       name
       location
+    }
+    competitions {
+      name
+      id
+      startDate
+      endDate
     }
   }
 `;
@@ -57,6 +63,10 @@ const ROUND_SINGLE_Q = gql`
         status
       }
       complete
+      competition {
+        id
+        name
+      }
     }
   }
 `;

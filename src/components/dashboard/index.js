@@ -1,13 +1,11 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { withAuth } from "@okta/okta-react";
-import { TwoColumn } from '../../layout';
 
 import {
   Row,
   List,
   Divider,
-  Typography,
   Button,
   PageHeader,
   Tag,

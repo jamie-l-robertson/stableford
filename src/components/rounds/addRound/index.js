@@ -15,6 +15,7 @@ import {
 } from "antd";
 import Players from "../../players/index";
 import { COURSES_LIST_Q } from "../../../threads/queries";
+import { COMPETITION_LIST_Q } from '../../../threads/queries';
 import { ADD_ROUND_MUTATION } from "../../../threads/mutations";
 
 const { Content, Sider } = Layout;
@@ -100,9 +101,9 @@ class addRound extends React.Component {
 
     newPlayers = e.target.checked
       ? [
-          { id: e.target.playerID, name: e.target.playerName },
-          ...this.state.players
-        ]
+        { id: e.target.playerID, name: e.target.playerName },
+        ...this.state.players
+      ]
       : (newPlayers = newPlayers.filter(id => id !== e.target.playerID));
 
     this.setState({
@@ -114,8 +115,10 @@ class addRound extends React.Component {
     return (
       <Query query={COURSES_LIST_Q}>
         {({ loading, error, data }) => {
-          const { courses } = data;
+          const { courses, competitions } = data;
           const { getFieldDecorator } = this.props.form;
+
+          console.log(data);
 
           return (
             <Form onSubmit={this.handleSubmit}>
@@ -152,13 +155,24 @@ class addRound extends React.Component {
                         })(
                           <Select placeholder="Select course">
                             {courses.map(course => (
-                              <option key={course.id} value={course.id}>
+                              <Select.Option key={course.id} value={course.id}>
                                 {course.name}
-                              </option>
+                              </Select.Option>
                             ))}
                           </Select>
                         )}
                       </Form.Item>
+
+                      {competitions &&
+                        <Form.Item label="Competition">
+                          <Select placeholder="Select competition">
+                            {competitions.map(competition => (
+                              <Select.Option key={competition.id} value={competition.id}>
+                                {competition.name}
+                              </Select.Option>
+                            ))}
+                          </Select>
+                        </Form.Item>}
 
                       <Form.Item label="Tee date">
                         {getFieldDecorator("date", {
@@ -178,6 +192,7 @@ class addRound extends React.Component {
                           />
                         )}
                       </Form.Item>
+
 
                       <Button type="primary" htmlType="submit">
                         Start round
