@@ -63,19 +63,43 @@ const ROUND_SINGLE_Q = gql`
         status
       }
       complete
-      competition {
-        id
-        name
-      }
     }
   }
 `;
 
 const COMPETITIONS_Q = gql`
   {
-    competitions {
+    competitions(where: { status: PUBLISHED}) {
       id
       name
+    }
+  }
+`;
+
+const COMPETITION_SINGLE_Q = gql`
+  query competitionInfo($competitionID: ID!) {
+    competition(where: {id: $competitionID}) {
+      id
+      name
+      startDate
+      endDate
+      rounds {
+        scorecard
+        courses {
+          name
+          id
+          holes
+        }
+        players {
+          id
+          name
+          handicap
+          status
+        }
+      }
+      complete
+      roundData
+      options
     }
   }
 `;

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { Row, Divider, PageHeader, Spin } from "antd";
-import { TwoColumn } from '../../../layout';
+import CompetitionForm from './competitionForm';
 
 class AddCompetition extends React.Component {
   render() {
@@ -15,7 +15,7 @@ class AddCompetition extends React.Component {
           </Row>
           <Divider />
         </Fragment>
-        <TwoColumn side="sidebar" content="players" />
+        <CompetitionForm />
       </Fragment>
     )
   }

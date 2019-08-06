@@ -236,7 +236,7 @@ class EditableTable extends React.Component {
   };
 
   render() {
-    const roundID = this.props.match.params.id;
+    const roundID = this.props.roundID || this.props.match.params.id;
     const components = {
       body: {
         cell: EditableCell
@@ -269,18 +269,19 @@ class EditableTable extends React.Component {
         errorPolicy="ignore"
       >
         {({ loading, error, data }) => {
-          console.log(data);
+
           return (
             <EditableContext.Provider value={this.props.form}>
               {error ? <div>{error}</div> : null}
               {loading ? <Spin /> : null}
               {data.round && (
                 <Fragment>
-                  <RoundHeader
-                    round={data.round}
-                    ID={roundID}
-                    {...this.props}
-                  />
+                  {!this.props.hideHeader &&
+                    <RoundHeader
+                      round={data.round}
+                      ID={roundID}
+                      {...this.props}
+                    />}
                   <ScoreCard
                     round={data.round}
                     components={components}

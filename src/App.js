@@ -14,6 +14,7 @@ import addRound from "./components/rounds/addRound";
 import { NotFound } from "./components/NotFound";
 import LoginPage from "./components/login";
 import Competitions from './components/competitions';
+import Competition from './components/competitions/competition'
 import addCompetition from './components/competitions/addCompetition';
 
 const { Content, Footer } = Layout;
@@ -46,6 +47,7 @@ class App extends Component {
                     <SecureRoute exact path="/round/:id" component={Round} />
                     <SecureRoute exact path="/add-round" component={addRound} />
                     <SecureRoute exact path="/competitions" component={Competitions} />
+                    <SecureRoute exact path="/competition/:id" component={Competition} />
                     <SecureRoute exact path="/add-competition" component={addCompetition} />
                     <Route
                       path="/implicit/callback"

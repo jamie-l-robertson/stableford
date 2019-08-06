@@ -1,54 +1,23 @@
-import React, { Fragment } from "react";
+import React from 'react';
 import { Query, withApollo } from "react-apollo";
+import Players from "../../players/index";
+import { COURSES_LIST_Q } from "../../../threads/queries";
 import dayjs from "dayjs";
 import {
-  Row,
-  Divider,
   Layout,
   Form,
   Select,
+  Input,
   DatePicker,
   Button,
   Icon,
-  Spin,
-  PageHeader
+  Spin
 } from "antd";
-import Players from "../../players/index";
-import { COURSES_LIST_Q } from "../../../threads/queries";
-import { COMPETITION_LIST_Q } from '../../../threads/queries';
-import { ADD_ROUND_MUTATION } from "../../../threads/mutations";
+
 
 const { Content, Sider } = Layout;
 
-class addRound extends React.Component {
-  state = {
-    date: null,
-    courseID: null,
-    players: []
-  };
-
-  generateDefaultScoreCard(players, names) {
-    let data = [];
-    let holes = [];
-
-    for (var i = 0; i < 18; i++) {
-      holes.push({
-        number: i + 1,
-        putts: 0
-      });
-    }
-
-    data = players.map((player, i) => {
-      return {
-        key: i,
-        id: player.id,
-        name: names[i].name,
-        hole: holes
-      };
-    });
-
-    return data;
-  }
+class CompetitionForm extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
@@ -65,49 +34,14 @@ class addRound extends React.Component {
         names.push({ name: player.name });
       });
 
-      this.props.client
-        .mutate({
-          mutation: ADD_ROUND_MUTATION,
-          variables: {
-            courseID: values.courseID,
-            playerIDS: players,
-            teeTime: date,
-            scorecard: this.generateDefaultScoreCard(players, names)
-          }
-        })
-        .then(result => {
-          this.props.history.push(`/round/${result.data.createRound.id}`);
-        });
-    });
-  };
-
-  courseSelectHandler(courses) {
-    const options = courses.map(course => {
-      return {
-        key: course.id,
-        text: course.name,
-        value: course.id
-      };
-    });
-
-    return [...options];
-  }
-
-  onCalendarChange = date => this.setState({ date });
-
-  handleSelected = e => {
-    e.preventDefault();
-    let newPlayers = [...this.state.players];
-
-    newPlayers = e.target.checked
-      ? [
-        { id: e.target.playerID, name: e.target.playerName },
-        ...this.state.players
-      ]
-      : (newPlayers = newPlayers.filter(id => id !== e.target.playerID));
-
-    this.setState({
-      players: newPlayers
+      // this.props.client
+      //   .mutate({
+      //     mutation: ADD_COMPETITION_MUTATION,
+      //     variables: {}
+      //   })
+      //   .then(result => {
+      //     this.props.history.push(`/round/${result.data.createCompetition.id}`);
+      //   });
     });
   };
 
@@ -122,15 +56,7 @@ class addRound extends React.Component {
             <Form onSubmit={this.handleSubmit}>
               {error ? <div>{error}</div> : null}
               {loading ? <Spin /> : null}
-              <Fragment>
-                <Row gutter={30}>
-                  <PageHeader
-                    onBack={() => window.history.back()}
-                    title="Add Round"
-                  />
-                </Row>
-                <Divider />
-              </Fragment>
+
               <Content>
                 <Layout style={{ background: "#FFFFFF" }}>
                   {courses && (
@@ -161,40 +87,55 @@ class addRound extends React.Component {
                         )}
                       </Form.Item>
 
-                      {competitions &&
-                        <Form.Item label="Competition">
-                          <Select placeholder="Select competition">
-                            {competitions.map(competition => (
-                              <Select.Option key={competition.id} value={competition.id}>
-                                {competition.name}
-                              </Select.Option>
-                            ))}
-                          </Select>
-                        </Form.Item>}
-
-                      <Form.Item label="Tee date">
-                        {getFieldDecorator("date", {
+                      <Form.Item label="Competition name">
+                        {getFieldDecorator("name", {
                           rules: [
                             {
                               required: true,
-                              message: "Please choose a date!"
+                              message: "Please name your competition"
+                            }
+                          ]
+                        })(
+                          <Input />
+                        )}
+                      </Form.Item>
+
+                      <Form.Item label="Start date">
+                        {getFieldDecorator("startDate", {
+                          rules: [
+                            {
+                              required: true,
+                              message: "Please choose a start date!"
                             }
                           ]
                         })(
                           <DatePicker
-                            showTime={{ format: "HH:mm", minuteStep: 5 }}
-                            placeholder="Select date"
+                            placeholder="Select start date"
                             onChange={this.onCalendarChange}
-                            value={this.state.date}
                             style={{ width: "100%" }}
                           />
                         )}
                       </Form.Item>
 
+                      <Form.Item label="End date">
+                        {getFieldDecorator("endDate", {
+                          rules: [
+                            {
+                              required: true,
+                              message: "Please choose a end date!"
+                            }
+                          ]
+                        })(
+                          <DatePicker
+                            placeholder="Select end date"
+                            onChange={this.onCalendarChange}
+                            style={{ width: "100%" }}
+                          />
+                        )}
+                      </Form.Item>
 
                       <Button type="primary" htmlType="submit">
-                        Start round
-                        <Icon type="right" />
+                        Start competition <Icon type="right" />
                       </Button>
                     </Sider>
                   )}
@@ -214,8 +155,8 @@ class addRound extends React.Component {
           );
         }}
       </Query>
-    );
+    )
   }
 }
 
-export default withApollo(Form.create({ name: "create_round" })(addRound));
+export default withApollo(Form.create({ name: "create_competition" })(CompetitionForm));
