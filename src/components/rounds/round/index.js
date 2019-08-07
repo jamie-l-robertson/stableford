@@ -289,6 +289,7 @@ class EditableTable extends React.Component {
                     handleCompleted={this.handleCompleted}
                     handleSubmit={this.handleSubmit}
                     allowSubmission={this.state.roundComplete}
+                    roundLabel={this.props.roundLabel}
                   />
                 </Fragment>
               )}

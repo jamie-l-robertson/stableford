@@ -21,8 +21,8 @@ const RoundList = ({ rounds, limit = 0 }) => {
                 {round.complete ? (
                   <Icon type="file-text" />
                 ) : (
-                  <Icon type="edit" />
-                )}
+                    <Icon type="edit" />
+                  )}
               </Link>
             ]}
           >
@@ -33,8 +33,8 @@ const RoundList = ({ rounds, limit = 0 }) => {
             {round.complete ? (
               <Tag color="green">Complete</Tag>
             ) : (
-              <Tag color="orange">In progress</Tag>
-            )}
+                <Tag color="orange">In progress</Tag>
+              )}
           </List.Item>
         );
       }}

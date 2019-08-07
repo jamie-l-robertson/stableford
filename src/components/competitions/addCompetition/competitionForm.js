@@ -1,7 +1,10 @@
 import React from 'react';
 import { Query, withApollo } from "react-apollo";
+import { withRouter } from "react-router-dom";
 import Players from "../../players/index";
+import generateDefaultScoreCard from '../../../helpers/scorecardGenerator';
 import { COURSES_LIST_Q } from "../../../threads/queries";
+import { ADD_COMPETITION_MUTATION } from "../../../threads/mutations";
 import dayjs from "dayjs";
 import {
   Layout,
@@ -19,29 +22,81 @@ const { Content, Sider } = Layout;
 
 class CompetitionForm extends React.Component {
 
+  state = {
+    date: null,
+    courseID: null,
+    players: []
+  };
+
+  handleSelected = e => {
+    e.preventDefault();
+    let newPlayers = [...this.state.players];
+
+    newPlayers = e.target.checked
+      ? [
+        { id: e.target.playerID, name: e.target.playerName },
+        ...this.state.players
+      ]
+      : (newPlayers = newPlayers.filter(id => id !== e.target.playerID));
+
+    this.setState({
+      players: newPlayers
+    });
+  };
+
   handleSubmit = event => {
     event.preventDefault();
 
     this.props.form.validateFields((err, values) => {
       if (err) console.log("ERROR :: ", err);
 
-      const date = dayjs(values.date).toISOString();
-      const players = [];
-      const names = [];
+      const startDate = dayjs(values.startDate);
+      const endDate = dayjs(values.endDate);
+      const tournament_length = endDate.diff(startDate, 'day');
+      let players = [];
+      let names = [];
+      let roundData = {};
+
 
       this.state.players.map(player => {
         players.push({ id: player.id });
         names.push({ name: player.name });
       });
 
-      // this.props.client
-      //   .mutate({
-      //     mutation: ADD_COMPETITION_MUTATION,
-      //     variables: {}
-      //   })
-      //   .then(result => {
-      //     this.props.history.push(`/round/${result.data.createCompetition.id}`);
-      //   });
+      roundData = {
+        name: values.name,
+        courseID: values.courseID,
+        startDate: startDate,
+        endDate: endDate,
+        rounds: []
+      }
+
+      for (var i = 0; i < tournament_length; i++) {
+        const roundEntry = {
+          players: {
+            connect: players
+          },
+          courses: {
+            connect: {
+              id: values.courseID
+            }
+          },
+          teeTime: "2019-08-01T00:00:00.570Z",
+          scorecard: generateDefaultScoreCard(players, names),
+          status: "PUBLISHED"
+        };
+
+        roundData.rounds.push(roundEntry);
+      }
+
+      this.props.client
+        .mutate({
+          mutation: ADD_COMPETITION_MUTATION,
+          variables: roundData
+        })
+        .then(result => {
+          this.props.history.push(`/competition/${result.data.createCompetition.id}`);
+        });
     });
   };
 
@@ -49,7 +104,7 @@ class CompetitionForm extends React.Component {
     return (
       <Query query={COURSES_LIST_Q}>
         {({ loading, error, data }) => {
-          const { courses, competitions } = data;
+          const { courses } = data;
           const { getFieldDecorator } = this.props.form;
 
           return (
@@ -159,4 +214,4 @@ class CompetitionForm extends React.Component {
   }
 }
 
-export default withApollo(Form.create({ name: "create_competition" })(CompetitionForm));
+export default withApollo(withRouter(Form.create({ name: "create_competition" })(CompetitionForm)));

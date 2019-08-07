@@ -48,4 +48,27 @@ const UPDATE_SCORECARD = gql`
   }
 `;
 
-export { ADD_ROUND_MUTATION, UPDATE_ROUND_MUTATION, UPDATE_SCORECARD };
+const ADD_COMPETITION_MUTATION = gql`
+mutation createCompetition(
+  $name: String!
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $rounds: [RoundCreateWithoutCompetitionInput!]
+) {
+    createCompetition(
+      data: {
+        status: PUBLISHED
+        name: $name
+        startDate: $startDate
+        endDate: $endDate
+        rounds: {
+          create: $rounds
+        }
+      }) {
+        id
+        name
+    }
+  }
+`;
+
+export { ADD_ROUND_MUTATION, UPDATE_ROUND_MUTATION, UPDATE_SCORECARD, ADD_COMPETITION_MUTATION };

@@ -84,6 +84,7 @@ const COMPETITION_SINGLE_Q = gql`
       startDate
       endDate
       rounds {
+        id
         scorecard
         courses {
           name
@@ -145,6 +146,7 @@ export {
   COURSE_SINGLE_Q,
   ROUNDS_Q,
   COMPETITIONS_Q,
+  COMPETITION_SINGLE_Q,
   ROUND_SINGLE_Q,
   PLAYERS_Q,
   PLAYER_SINGLE_Q
