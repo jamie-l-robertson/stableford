@@ -51,6 +51,15 @@ const UPDATE_SCORECARD = gql`
   }
 `;
 
+const UPDATE_COMPETITION_ROUND_DATA = gql`
+  mutation upateCompetition($id: ID, $roundData: Json) {
+    updateCompetition(where: {id: $id}, data: {roundData: $roundData}) {
+      id
+      roundData
+    }
+  }
+`;
+
 const ADD_COMPETITION_MUTATION = gql`
 mutation createCompetition(
   $name: String!
@@ -74,4 +83,4 @@ mutation createCompetition(
   }
 `;
 
-export { ADD_ROUND_MUTATION, UPDATE_ROUND_MUTATION, UPDATE_SCORECARD, ADD_COMPETITION_MUTATION };
+export { ADD_ROUND_MUTATION, UPDATE_ROUND_MUTATION, UPDATE_SCORECARD, ADD_COMPETITION_MUTATION, UPDATE_COMPETITION_ROUND_DATA };

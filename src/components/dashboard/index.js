@@ -36,6 +36,14 @@ const data = [
       url: "/players",
       text: "View"
     }
+  },
+  {
+    title: "Competitions",
+    description: "View all competitions",
+    link: {
+      url: "/competitions",
+      text: "View"
+    }
   }
 ];
 

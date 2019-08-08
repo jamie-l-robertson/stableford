@@ -3,10 +3,11 @@ import { Query, withApollo } from "react-apollo";
 import calculateStablefordScore from "../../../helpers/stableford";
 
 import { Input, Popconfirm, Form, Icon, Spin } from "antd";
-import { ROUND_SINGLE_Q } from "../../../threads/queries";
+import { ROUND_SINGLE_Q, COMPETITION_SINGLE_Q } from "../../../threads/queries";
 import {
   UPDATE_ROUND_MUTATION,
-  UPDATE_SCORECARD
+  UPDATE_SCORECARD,
+  UPDATE_COMPETITION_ROUND_DATA
 } from "../../../threads/mutations";
 
 import RoundHeader from "./header";
@@ -182,8 +183,6 @@ class EditableTable extends React.Component {
         holeArray
       );
 
-      console.log(round.scorecard[index].name + ':' + round.players[index].id)
-
       const scorecardData = {
         key: index,
         id: round.players[index].id,
@@ -225,10 +224,33 @@ class EditableTable extends React.Component {
     this.props.client.mutate({
       mutation: UPDATE_SCORECARD,
       variables: {
-        id: id || this.props.match.params.id,
+        id: this.props.roundID || this.props.match.params.id,
         complete: this.state.roundComplete
       }
-    });
+    })
+      .then(result => {
+        if (this.props.competitionID) {
+          this.props.client.query({
+            query: COMPETITION_SINGLE_Q,
+            variables: {
+              competitionID: this.props.competitionID,
+            }
+          })
+            .then(comp => {
+
+              // TODO - Update the specific round in the data set 
+              // Retain calculated scores as handicap can change for future rounds
+
+              this.props.client.mutate({
+                mutation: UPDATE_COMPETITION_ROUND_DATA,
+                variables: {
+                  id: this.props.competitionID,
+                  roundData: comp.data.competition.rounds
+                }
+              });
+            });
+        }
+      });
   };
 
   handleCompleted = e => {
@@ -286,7 +308,7 @@ class EditableTable extends React.Component {
                       {...this.props}
                     />}
                   <ScoreCard
-                    round={data.round}
+                    round={data.competitionData || data.round}
                     components={components}
                     columns={columns}
                     handleCompleted={this.handleCompleted}

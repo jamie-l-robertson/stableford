@@ -30,7 +30,7 @@ const COURSE_SINGLE_Q = gql`
 
 const ROUNDS_Q = gql`
   {
-    rounds {
+    rounds(where: { competition: null }) {
       id
       teeTime
       courses {

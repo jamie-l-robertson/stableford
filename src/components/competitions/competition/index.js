@@ -8,6 +8,7 @@ import { COMPETITION_SINGLE_Q } from '../../../threads/queries';
 
 
 class Competition extends React.Component {
+
   render() {
     const competitionID = this.props.competitionID || this.props.match.params.id;
 
@@ -33,7 +34,13 @@ class Competition extends React.Component {
                 {data.competition && data.competition.rounds.map((round, i) => {
                   return (
                     <Fragment>
-                      <Round roundID={round.id} roundLabel={`Round #${i + 1}`} hideHeader hideFooter />
+                      <Round
+                        roundID={round.id}
+                        competitionID={competition.id}
+                        roundLabel={`Round #${i + 1}`}
+                        handleCompRoundSubmit={this.handleSubmit}
+                        competitionRoundData={data.competition.roundData[i] || null}
+                        hideHeader />
                       <Divider />
                     </Fragment>
                   )

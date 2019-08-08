@@ -13,6 +13,7 @@ const ScoreCard = ({
   roundID,
   hideFooter
 }) => {
+
   return (
     <Fragment>
       {roundLabel && <RoundLabel label={roundLabel} />}
@@ -33,15 +34,16 @@ const ScoreCard = ({
                   {/* Hook up final submission and store snapshot */}
                   <Button
                     type="primary"
-                    onClick={e => handleSubmit(e), roundID}
-                  disabled={!allowSubmission}
+                    onClick={handleSubmit}
+                    disabled={!allowSubmission}
                   >
-                  Submit <Icon type="save" />
-                </Button>
-              </Col>
-            </Row>);
-}
-}} />
+                    Submit <Icon type="save" />
+                  </Button>
+                </Col>
+              </Row>
+            );
+          }
+        }} />
     </Fragment>
   );
 };

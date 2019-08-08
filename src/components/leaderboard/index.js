@@ -93,7 +93,6 @@ class LeaderBoard extends React.Component {
       return comparison;
     });
 
-    console.log(scoreBreakdown)
 
     //Append position
     for (var p = 0; p < scoreBreakdown.length; p++) {
