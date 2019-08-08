@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import RoundLabel from './roundLabel';
 import { Row, Col, Table, Icon, Checkbox, Button } from "antd";
 
 const ScoreCard = ({
@@ -8,11 +9,13 @@ const ScoreCard = ({
   handleSubmit,
   handleCompleted,
   allowSubmission,
-  roundLabel
+  roundLabel,
+  roundID,
+  hideFooter
 }) => {
   return (
     <Fragment>
-      {roundLabel && <h2>{roundLabel}</h2>}
+      {roundLabel && <RoundLabel label={roundLabel} />}
       <Table
         components={components}
         bordered
@@ -22,23 +25,23 @@ const ScoreCard = ({
         pagination={false}
         scroll={{ x: true }}
         footer={() => {
-          return (
-            <Row>
-              <Col span={24} style={{ textAlign: "right" }}>
-                <Checkbox onChange={handleCompleted}>Finish</Checkbox>
-                {/* Hook up final submission */}
-                <Button
-                  type="primary"
-                  onClick={e => handleSubmit(e)}
+          if (!hideFooter) {
+            return (
+              <Row>
+                <Col span={24} style={{ textAlign: "right" }}>
+                  <Checkbox onChange={handleCompleted}>Finish</Checkbox>
+                  {/* Hook up final submission and store snapshot */}
+                  <Button
+                    type="primary"
+                    onClick={e => handleSubmit(e), roundID}
                   disabled={!allowSubmission}
-                >
+                  >
                   Submit <Icon type="save" />
                 </Button>
               </Col>
-            </Row>
-          );
-        }}
-      />
+            </Row>);
+}
+}} />
     </Fragment>
   );
 };

@@ -1,20 +1,13 @@
 import React, { Fragment } from 'react';
 import { Query } from 'react-apollo';
 import CompetitionHeader from '../competitionHeader';
+import Leaderboard from '../../leaderboard';
 import { Round } from '../../rounds/round';
-import { Spin } from "antd";
+import { Divider, Spin } from "antd";
 import { COMPETITION_SINGLE_Q } from '../../../threads/queries';
 
 
 class Competition extends React.Component {
-  state = {
-    leaderboard: []
-  };
-
-  // TODO
-  // Comp header
-  // Comp leaderboard
-
   render() {
     const competitionID = this.props.competitionID || this.props.match.params.id;
 
@@ -38,16 +31,19 @@ class Competition extends React.Component {
                   <CompetitionHeader details={competition} {...this.props} />}
 
                 {data.competition && data.competition.rounds.map((round, i) => {
-                  return <Round roundID={round.id} roundLabel={`Round #${i + 1}`} hideHeader />
+                  return (
+                    <Fragment>
+                      <Round roundID={round.id} roundLabel={`Round #${i + 1}`} hideHeader hideFooter />
+                      <Divider />
+                    </Fragment>
+                  )
                 })}
+                {data.competition && <Leaderboard data={data.competition} />}
               </Fragment>
             )
           }}
         </Query>
 
-
-
-        {/* <Round roundID="cjk074b20wyvt0953djxocvjp" hideHeader /> */}
         {/* <h3>Leaderboard</h3> */}
       </Fragment>
     )

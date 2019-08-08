@@ -204,7 +204,7 @@ class EditableTable extends React.Component {
       this.props.client.mutate({
         mutation: UPDATE_ROUND_MUTATION,
         variables: {
-          id: this.props.match.params.id,
+          id: round.id,
           scorecard: round.scorecard
         }
       });
@@ -215,7 +215,7 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: key });
   }
 
-  handleSubmit = e => {
+  handleSubmit = (e, id) => {
     e.preventDefault();
 
     if (!this.state.roundComplete) return false;
@@ -223,7 +223,7 @@ class EditableTable extends React.Component {
     this.props.client.mutate({
       mutation: UPDATE_SCORECARD,
       variables: {
-        id: this.props.match.params.id,
+        id: id || this.props.match.params.id,
         complete: this.state.roundComplete
       }
     });
@@ -237,6 +237,7 @@ class EditableTable extends React.Component {
 
   render() {
     const roundID = this.props.roundID || this.props.match.params.id;
+
     const components = {
       body: {
         cell: EditableCell
@@ -290,6 +291,8 @@ class EditableTable extends React.Component {
                     handleSubmit={this.handleSubmit}
                     allowSubmission={this.state.roundComplete}
                     roundLabel={this.props.roundLabel}
+                    roundID={roundID}
+                    hideFooter={this.props.hideFooter}
                   />
                 </Fragment>
               )}

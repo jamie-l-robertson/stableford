@@ -49,6 +49,7 @@ const ROUNDS_Q = gql`
 const ROUND_SINGLE_Q = gql`
   query roundInfo($roundID: ID!) {
     round(where: { id: $roundID }) {
+      id
       teeTime
       scorecard
       courses {
