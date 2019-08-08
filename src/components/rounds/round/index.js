@@ -182,6 +182,8 @@ class EditableTable extends React.Component {
         holeArray
       );
 
+      console.log(round.scorecard[index].name + ':' + round.players[index].id)
+
       const scorecardData = {
         key: index,
         id: round.players[index].id,

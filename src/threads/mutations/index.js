@@ -36,6 +36,9 @@ const UPDATE_ROUND_MUTATION = gql`
     updateRound(where: { id: $id }, data: { scorecard: $scorecard }) {
       id
       scorecard
+      players {
+      id
+    }
     }
   }
 `;

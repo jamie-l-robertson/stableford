@@ -63,6 +63,7 @@ class CompetitionForm extends React.Component {
         names.push({ name: player.name });
       });
 
+
       roundData = {
         name: values.name,
         courseID: values.courseID,
