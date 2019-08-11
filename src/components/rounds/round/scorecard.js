@@ -32,13 +32,7 @@ const ScoreCard = ({
                 <Col span={24} style={{ textAlign: "right" }}>
                   <Checkbox onChange={handleCompleted}>Finish</Checkbox>
                   {/* Hook up final submission and store snapshot */}
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    disabled={!allowSubmission}
-                  >
-                    Submit <Icon type="save" />
-                  </Button>
+                  <Button onClick={handleSubmit} disabled={!allowSubmission}>Submit <Icon type="save" /></Button>
                 </Col>
               </Row>
             );

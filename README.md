@@ -41,6 +41,7 @@ This is a personal project and a work in progress, the following key elements st
 - Improve login experience
 - Improve layout reusability
 - Round Leaderboard
+- Make mobile friendly
 - Cloudinary for image management
 - Add ability Add/Edit Players profiles/Courses
 - Site stats (Users, visits etc) + GA tacking
