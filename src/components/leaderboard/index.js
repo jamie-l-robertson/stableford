@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import getUnique from '../../helpers/getUnique';
-import { Table, PageHeader } from 'antd';
+import { Row, Table, PageHeader } from 'antd';
 
 function generateLeaderboardColumns(data) {
   let columns = [];
@@ -111,13 +111,17 @@ const LeaderBoard = props => {
   const columns = generateLeaderboardColumns(data);
 
   return (
-    <Table
-      columns={columns}
-      dataSource={calculateLeaderboardStandings(data)}
-      bordered
-      title={() => <PageHeader title="Competition Leaderboard" />}
-      pagination={false}
-    />
+    <>
+      <Row gutter={40}>
+        <PageHeader title="Competition Leaderboard" />
+      </Row>
+      <Table
+        columns={columns}
+        dataSource={calculateLeaderboardStandings(data)}
+        bordered
+        pagination={false}
+      />
+    </>
   )
 }
 
